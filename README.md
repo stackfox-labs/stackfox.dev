@@ -35,6 +35,23 @@ npm run lint
 npm run test
 ```
 
+## Railway deployment
+
+This repo uses root-level config-as-code in `railway.json`.
+
+That file forces Railway to treat the site as a Nitro-backed app instead of a static `dist` deploy:
+
+- `buildCommand`: `npm run build`
+- `startCommand`: `npm run start`
+- `healthcheckPath`: `/`
+
+### Deploy steps
+
+1. Import this repository as its own Railway service.
+2. Keep the Railway config file at the repo root: `/railway.json`.
+3. Set `VITE_STACKFOX_DASHBOARD_URL` to the public dashboard URL.
+4. Deploy and bind the production domain after the healthcheck passes.
+
 ## Contributing
 
 Contributions to the StackFox site are welcome! If you have suggestions for improvements, please open an issue or submit a pull request.
