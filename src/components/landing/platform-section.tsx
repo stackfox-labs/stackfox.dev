@@ -5,13 +5,13 @@ const pillars = [
     Icon: Code2,
     title: "Luau-native",
     description:
-      "Track events, store records, and manage your backend entirely in Luau — the language you already use to build your game. No context switching, no external tools, no wrappers.",
+      "Send events and sync records entirely in Luau — the language you already use to build your game. No context switching, no external tools, no wrappers.",
   },
   {
     Icon: Monitor,
     title: "Studio-integrated",
     description:
-      "View events, inspect records, and manage services directly from your dashboard. Your entire backend workflow stays connected to where your game lives.",
+      "View incoming events, inspect synced records, and manage your project directly from the dashboard. Everything stays connected to your game.",
   },
   {
     Icon: Server,
@@ -31,7 +31,7 @@ export function PlatformSection() {
             <span className="text-secondary">One SDK.</span>
           </h2>
           <p className="text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed">
-            StackFox is a backend platform, not a collection of separate tools. Every service follows the same model — so what you learn once applies everywhere, and your codebase stays consistent as you adopt more services.
+            StackFox is a data bridge platform for Roblox games, not a collection of separate tools. Every module follows the same pattern — so what you learn once applies everywhere.
           </p>
         </div>
 

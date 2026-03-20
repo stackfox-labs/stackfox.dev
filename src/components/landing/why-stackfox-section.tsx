@@ -1,11 +1,11 @@
 import { Check, X } from "lucide-react"
 
 const provides = [
-  "Hosted backend services",
-  "Event tracking and ingestion",
-  "Collection-based record storage",
-  "Real-time dashboard",
-  "Simple SDK access",
+  "A data bridge between Roblox and external systems",
+  "Structured event tracking from your game",
+  "External records accessible from anywhere",
+  "Real-time dashboard for events and records",
+  "One simple Luau SDK",
 ]
 
 const noLongerNeeded = [
@@ -27,9 +27,7 @@ export function WhyStackFoxSection() {
             <span className="text-secondary">StackFox.</span>
           </h2>
           <p className="text-lg text-zinc-300 max-w-2xl mx-auto">
-            StackFox removes the need to build and maintain backend
-            infrastructure for Roblox games. Developers can focus on gameplay
-            while StackFox handles the backend systems.
+            StackFox gives Roblox games a data bridge to external systems — no backend to build, no infrastructure to manage. Focus on your game while StackFox handles the data layer.
           </p>
         </div>
 

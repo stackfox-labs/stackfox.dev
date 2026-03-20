@@ -13,7 +13,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       {
-        title: "StackFox | Backend infrastructure for Roblox games",
+        title: "StackFox | Connect Roblox to the rest of your stack",
       },
       {
         name: "description",

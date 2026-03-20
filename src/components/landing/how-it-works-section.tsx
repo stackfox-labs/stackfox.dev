@@ -4,20 +4,20 @@ const steps = [
   {
     number: 1,
     title: "Initialize the SDK",
-    description: "Add StackFox to your project and call init with your API key. That's it — no schemas, no setup steps.",
+    description: "Add StackFox to your project and call init with your API key. That's it — no setup steps, no configuration.",
     code: 'local StackFox = require(game.ReplicatedStorage.StackFox)\n\nStackFox.init({\n  apiKey = "sf_live_xxxxxxxx",\n})',
   },
   {
     number: 2,
     title: "Track Events",
-    description: "Send structured events from anywhere in your game code. Events are stored and visible in the dashboard instantly.",
+    description: "Send structured game events out of Roblox from anywhere in your code. Events are captured and visible in the dashboard instantly.",
     code: 'StackFox.events:track("item_purchase", {\n  userId = tostring(player.UserId),\n  item = "sword_01",\n  cost = 100,\n})',
   },
   {
     number: 3,
-    title: "Store Records",
-    description: "Persist game data in collections with simple key-value operations. Read, write, and delete with one line.",
-    code: 'StackFox.records:set("players", odId, {\n  coins = 100, level = 5,\n})\n\nlocal data = StackFox.records:get("players", odId)\nprint(data.coins) -- 100',
+    title: "Sync Records",
+    description: "Store and sync external records with simple key-value operations. Access them from outside your game — websites, dashboards, admin tools.",
+    code: 'local playerId = tostring(player.UserId)\nStackFox.records:set("players", playerId, {\n  coins = 100, level = 5,\n})\n\nlocal data = StackFox.records:get("players", playerId)\nprint(data.coins) -- 100',
   },
 ]
 

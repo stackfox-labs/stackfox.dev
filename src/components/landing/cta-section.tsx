@@ -11,7 +11,7 @@ export function CTASection() {
         <Card3D className="bg-white p-12">
           <h2 className="mb-4 text-4xl font-bold text-zinc-900">Start using StackFox in minutes.</h2>
           <p className="mx-auto mb-8 max-w-2xl text-xl text-zinc-600">
-            Track events, store records, and bridge your game data to a hosted backend - all through a simple Luau SDK.
+            Connect your Roblox game to external systems. Send events, sync records, and power dashboards and tools — all through a simple Luau SDK.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Button asChild size="lg" className="bg-red-500 hover:bg-red-600">
@@ -19,7 +19,7 @@ export function CTASection() {
             </Button>
             <Button variant="outline" size="lg">View Documentation</Button>
           </div>
-          <p className="mt-4 text-sm text-zinc-500">One SDK. Multiple backend services.</p>
+          <p className="mt-4 text-sm text-zinc-500">One SDK. Events and records, ready to go.</p>
         </Card3D>
       </div>
     </section>

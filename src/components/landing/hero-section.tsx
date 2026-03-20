@@ -2,18 +2,20 @@ import { getDashboardUrl } from "@/lib/dashboard-url"
 import { Button } from "@/components/ui/button"
 import { LuaCode } from "@/components/ui/lua-code"
 
-const codeExample = `-- Track game events
-StackFox.events:track("player_join", {
+const codeExample = `-- Send events out of your game
+StackFox.events:track("item_purchase", {
   userId = tostring(player.UserId),
-  username = player.Name,
+  item = "VIP Pass",
+  price = 499,
 })
 
--- Store and retrieve records
-StackFox.records:set("players", odId, {
+-- Read and write external records
+local playerId = tostring(player.UserId)
+StackFox.records:set("players", playerId, {
   coins = 100, level = 5,
 })
 
-local data = StackFox.records:get("players", odId)`
+local data = StackFox.records:get("players", playerId)`
 
 export function HeroSection() {
   const dashboardUrl = getDashboardUrl()
@@ -24,11 +26,11 @@ export function HeroSection() {
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <h1 className="mb-6 text-4xl font-bold text-balance animate-in fade-in duration-1200 md:text-6xl">
-              Backend infrastructure for <span className="text-primary">Roblox games.</span>
+              Connect Roblox to <span className="text-primary">the rest of your stack.</span>
             </h1>
 
             <p className="mb-8 max-w-xl text-lg text-muted-foreground text-balance animate-in fade-in duration-1000 delay-150 md:text-xl">
-              Track events, store records, and bridge your game data to a hosted backend. One SDK, zero infrastructure.
+              Send events out of your game and sync records with external systems. One SDK, no backend required.
             </p>
 
             <div className="flex animate-in fade-in duration-1000 delay-300 flex-col items-start gap-4 sm:flex-row">

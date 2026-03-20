@@ -7,16 +7,16 @@ const products = [
   {
     id: "events",
     name: "Events",
-    tagline: "Structured game events, zero infrastructure.",
+    tagline: "Send structured game events to external systems.",
     description:
-      "Send structured events from anywhere in your game code. Power analytics, telemetry, and debugging without building a pipeline from scratch.",
+      "Track game activity from anywhere in your code and send it outside Roblox. Purchases, progression, moderation actions, economy changes — all captured and visible in your dashboard.",
     Icon: BarChart3,
     status: "available" as const,
     features: [
       "Track any game event with a single call",
       "Structured payloads with automatic timestamps",
-      "Real-time event stream in the dashboard",
-      "Foundation for analytics and automation",
+      "Real-time event stream visible in the dashboard",
+      "Power analytics, dashboards, and automations",
     ],
     code: `-- Track events from anywhere in your game
 StackFox.events:track("player_join", {
@@ -35,30 +35,31 @@ StackFox.events:track("item_purchase", {
   {
     id: "records",
     name: "Records",
-    tagline: "Persistent key-value storage, organized by collection.",
+    tagline: "External records your game and outside systems share.",
     description:
-      "Store, retrieve, and manage game data using simple collection-based key-value storage. No databases to set up, no servers to manage.",
+      "Read and write structured records that live outside Roblox. Power player profiles for websites, moderation tools, admin panels, dashboards, and anything else that needs access to your game data.",
     Icon: Database,
     status: "available" as const,
     features: [
-      "Collection-based key-value storage",
+      "Collection-based key-value records",
       "Simple get, set, delete operations",
-      "Automatic upserts on write",
+      "Accessible from outside Roblox",
       "Browse and inspect records in the dashboard",
     ],
-    code: `-- Save player data
-StackFox.records:set("players", odId, {
+    code: `-- Write a player profile
+local playerId = tostring(player.UserId)
+StackFox.records:set("players", playerId, {
   username = player.Name,
   coins = 100,
   level = 1,
 })
 
 -- Read it back
-local data = StackFox.records:get("players", odId)
+local data = StackFox.records:get("players", playerId)
 print(data.coins) -- 100
 
 -- Delete it
-StackFox.records:delete("players", odId)`,
+StackFox.records:delete("players", playerId)`,
     filename: "Records.lua",
   },
   {
@@ -93,7 +94,7 @@ end`,
     name: "Leaderboards",
     tagline: "Global and seasonal rankings, fully hosted.",
     description:
-      "Manage global or seasonal leaderboards without DataStore limits. Real-time ranking, top-N queries, and scheduled resets — all handled by StackFox.",
+      "Manage global and seasonal leaderboards for your game. Real-time rankings, top-N queries, and scheduled resets — all hosted by StackFox.",
     Icon: Trophy,
     status: "soon" as const,
     features: [
@@ -125,10 +126,10 @@ export function ProductsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold text-zinc-900 mb-4">
-            Every backend service your game needs.
+            The platform for Roblox game data.
           </h2>
           <p className="text-lg md:text-xl text-zinc-600 max-w-3xl mx-auto">
-            StackFox ships a growing suite of backend services — all accessed through the same Luau SDK, all integrated with Roblox Studio.
+            StackFox gives your game a bridge to the outside world — events to send, records to sync, all through the same Luau SDK.
           </p>
         </div>
 
