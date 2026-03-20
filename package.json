@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite dev --port 3441",
     "build": "vite build",
+    "start": "node .output/server/index.mjs",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
     "lint": "eslint src/components/global src/components/landing src/lib/dashboard-url.ts src/routes",
