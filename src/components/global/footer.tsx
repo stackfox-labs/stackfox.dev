@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router"
 import { getDashboardUrl } from "@/lib/dashboard-url"
 import { Logo } from "@/components/logo"
 import { Button } from "@/components/ui/button"
@@ -5,17 +6,61 @@ import { Button } from "@/components/ui/button"
 const footerSections = [
   {
     title: "Platform",
-    links: ["Events", "Records", "Feature Flags", "Leaderboards", "SDK Reference"],
+    links: [
+      { label: "Events", href: "/docs/events" },
+      { label: "Records", href: "/docs/records" },
+      { label: "Feature Flags", href: "#" },
+      { label: "Leaderboards", href: "#" },
+      { label: "SDK Reference", href: "/docs/introduction" },
+    ],
   },
   {
     title: "Developers",
-    links: ["Documentation", "Getting Started", "API Reference", "Changelog", "Status Page"],
+    links: [
+      { label: "Documentation", href: "/docs" },
+      { label: "Getting Started", href: "/docs/quick-start" },
+      { label: "API Reference", href: "#" },
+      { label: "Changelog", href: "#" },
+      { label: "Status Page", href: "#" },
+    ],
   },
   {
     title: "Company",
-    links: ["About", "Blog", "Careers", "Privacy Policy", "Terms of Service"],
+    links: [
+      { label: "About", href: "/about" },
+      { label: "Blog", href: "#" },
+      { label: "Careers", href: "#" },
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+    ],
   },
 ]
+
+function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+  const isExternal = href.startsWith("http")
+  const isHash = href === "#"
+
+  if (isHash || isExternal) {
+    return (
+      <a
+        href={href}
+        className="nav-link-3d -mx-2 block px-2 py-1 text-xs text-zinc-400 transition-all duration-200 hover:text-white sm:text-sm"
+        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
+        {children}
+      </a>
+    )
+  }
+
+  return (
+    <Link
+      to={href as never}
+      className="nav-link-3d -mx-2 block px-2 py-1 text-xs text-zinc-400 transition-all duration-200 hover:text-white sm:text-sm"
+    >
+      {children}
+    </Link>
+  )
+}
 
 export function Footer() {
   const dashboardUrl = getDashboardUrl()
@@ -39,7 +84,9 @@ export function Footer() {
               <Button asChild variant="default" size="sm" className="bg-primary text-xs sm:text-sm">
                 <a href={dashboardUrl}>Get Started</a>
               </Button>
-              <Button variant="ghost" size="sm" className="text-xs sm:text-sm">View Docs</Button>
+              <Button asChild variant="ghost" size="sm" className="text-xs sm:text-sm">
+                <Link to="/docs">View Docs</Link>
+              </Button>
             </div>
           </div>
 
@@ -49,9 +96,7 @@ export function Footer() {
               <ul className="space-y-1 sm:space-y-2">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
-                    <a href="#" className="nav-link-3d -mx-2 block px-2 py-1 text-xs text-zinc-400 transition-all duration-200 hover:text-white sm:text-sm">
-                      {link}
-                    </a>
+                    <FooterLink href={link.href}>{link.label}</FooterLink>
                   </li>
                 ))}
               </ul>
@@ -63,8 +108,8 @@ export function Footer() {
           <div className="order-2 text-xs text-zinc-400 sm:order-1 sm:text-sm">© 2026 StackFox. All rights reserved.</div>
           <div className="order-1 flex flex-col items-center gap-4 sm:order-2 sm:flex-row sm:gap-6">
             <div className="flex flex-wrap justify-center gap-3 text-xs text-zinc-400 sm:gap-6 sm:text-sm">
-              <a href="#" className="nav-link-3d px-2 py-1 transition-all duration-200 hover:text-white">Privacy</a>
-              <a href="#" className="nav-link-3d px-2 py-1 transition-all duration-200 hover:text-white">Terms</a>
+              <Link to="/privacy" className="nav-link-3d px-2 py-1 transition-all duration-200 hover:text-white">Privacy</Link>
+              <Link to="/terms" className="nav-link-3d px-2 py-1 transition-all duration-200 hover:text-white">Terms</Link>
             </div>
             <Button onClick={scrollToTop} variant="outline" size="sm" className="border-zinc-600 bg-foreground px-2 text-xs text-zinc-300 hover:bg-zinc-700 hover:text-white sm:px-3 sm:text-sm">
               Back to Top

@@ -38,7 +38,7 @@ export function HeroSection() {
                 <a href={dashboardUrl}>Get Started</a>
               </Button>
               <Button variant="outline" size="lg" className="border-2 border-zinc-600 bg-transparent px-8 py-4 text-lg font-semibold transition-all duration-200 hover:scale-[1.02]">
-                View Documentation
+                <a href="/docs">View Documentation</a>
               </Button>
             </div>
           </div>

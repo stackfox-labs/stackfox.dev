@@ -23,6 +23,9 @@ export function Header() {
           <a href="#use-cases" className="nav-link-3d px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors">
             Use Cases
           </a>
+          <Link to="/docs" className="nav-link-3d px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors">
+            Docs
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">

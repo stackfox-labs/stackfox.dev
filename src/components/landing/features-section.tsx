@@ -65,7 +65,9 @@ export function FeaturesSection() {
           <Button asChild size="lg" className="mr-4">
             <a href={dashboardUrl}>Get Started</a>
           </Button>
-          <Button variant="outline" size="lg" className="border-white! bg-transparent! text-white! hover:bg-white/10!">View Documentation</Button>
+          <Button variant="outline" size="lg" className="border-white! bg-transparent! text-white! hover:bg-white/10!">
+            <a href="/docs">View Documentation</a>
+          </Button>
         </div>
       </div>
     </section>

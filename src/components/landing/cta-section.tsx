@@ -17,7 +17,9 @@ export function CTASection() {
             <Button asChild size="lg" className="bg-red-500 hover:bg-red-600">
               <a href={dashboardUrl}>Get Started</a>
             </Button>
-            <Button variant="outline" size="lg">View Documentation</Button>
+            <Button variant="outline" size="lg">
+              <a href="/docs">View Documentation</a>
+            </Button>
           </div>
           <p className="mt-4 text-sm text-zinc-500">One SDK. Events and records, ready to go.</p>
         </Card3D>
