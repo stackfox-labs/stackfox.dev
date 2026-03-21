@@ -120,6 +120,36 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ── Docs: rehype-pretty-code code block base styles ── */
+[data-rehype-pretty-code-figure] {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+[data-rehype-pretty-code-figure] pre {
+  border: 1px solid #27272a; /* zinc-800 */
+  overflow-x: auto;
+}
+
+[data-rehype-pretty-code-figure] [data-line] {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+[data-rehype-pretty-code-figure] [data-highlighted-line] {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-rehype-pretty-code-title] {
+  border: 1px solid #27272a;
+  border-bottom: none;
+  background-color: #18181b;
+  color: #a1a1aa;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.5rem 1rem;
+}
+
 @layer base {
   * {
     @apply border-zinc-300 outline-yellow-500/50;

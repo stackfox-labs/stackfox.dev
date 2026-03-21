@@ -1,0 +1,94 @@
+---
+title: Quick Start
+description: Get your first event and record into StackFox in under 5 minutes.
+section: Getting Started
+order: 2
+---
+
+This guide takes you from zero to your first event and record in StackFox.
+
+## 1. Create a project
+
+Go to your [StackFox dashboard](/dashboard) and create a new project. A project holds all events, records, and API keys for one game.
+
+After creation you'll land on the project overview. Copy your **API key** from the API Keys page — you'll need it in step 3.
+
+## 2. Install the Luau SDK
+
+In Roblox Studio, place the StackFox module inside `ReplicatedStorage`. Get the latest version from the [Releases page](https://github.com/stackfox/sdk-luau/releases).
+
+Your `Explorer` should look like:
+
+```
+ReplicatedStorage
+  └── StackFox (ModuleScript)
+```
+
+## 3. Initialize the client
+
+In a **Server Script** inside `ServerScriptService`:
+
+```lua
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+
+local StackFox = require(ReplicatedStorage.StackFox)
+
+StackFox.init({
+  apiKey = "sf_live_your_key_here",
+})
+```
+
+<Callout type="warning" title="Keep your key server-side">
+Never initialize StackFox in a LocalScript. Your API key must stay on the server.
+</Callout>
+
+## 4. Track your first event
+
+Add this inside the same script, after `StackFox.init`:
+
+```lua
+Players.PlayerAdded:Connect(function(player)
+  StackFox.events:track("player_joined", {
+    userId = tostring(player.UserId),
+    name = player.Name,
+  })
+end)
+```
+
+Start a playtest. Within a few seconds the event will appear in the **Events** tab of your dashboard.
+
+## 5. Write your first record
+
+```lua
+Players.PlayerAdded:Connect(function(player)
+  local userId = tostring(player.UserId)
+
+  -- Read existing profile (nil if first visit)
+  local profile = StackFox.records:get("profiles", userId)
+
+  if not profile then
+    -- Create a default profile
+    StackFox.records:set("profiles", userId, {
+      visits = 1,
+      firstSeen = os.time(),
+    })
+  else
+    -- Update visit count
+    StackFox.records:set("profiles", userId, {
+      visits = (profile.visits or 0) + 1,
+    })
+  end
+end)
+```
+
+The record will appear in the **Records** tab of your dashboard, under the `profiles` collection.
+
+<Callout type="tip">
+Records are accessible over the REST API too. Any external system with your API key can read or update `profiles` records.
+</Callout>
+
+## Next steps
+
+- [Events overview](/docs/events) — learn what you can track and how events are structured.
+- [Records overview](/docs/records) — understand collections, keys, and external access.

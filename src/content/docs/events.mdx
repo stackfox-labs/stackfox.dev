@@ -1,0 +1,79 @@
+---
+title: Events
+description: Send structured game events to external systems.
+section: Events
+order: 1
+---
+
+Events are structured, timestamped messages your game sends out. Once written, they're immutable — they represent things that happened at a point in time.
+
+## Tracking an event
+
+```lua
+StackFox.events:track(eventName, payload)
+```
+
+| Argument | Type | Description |
+|---|---|---|
+| `eventName` | `string` | Identifies the type of event. Use snake_case. |
+| `payload` | `table` | Arbitrary key-value data. Values must be strings, numbers, or booleans. |
+
+### Example
+
+```lua
+StackFox.events:track("item_purchased", {
+  userId = tostring(player.UserId),
+  itemId = "sword_iron",
+  currency = "coins",
+  amount = 250,
+})
+```
+
+## Naming conventions
+
+Use `snake_case` for event names. Group related events with a prefix:
+
+```
+player_joined
+player_left
+match_started
+match_ended
+item_purchased
+item_equipped
+```
+
+<Callout type="tip" title="Be consistent">
+Consistent naming makes it easier to filter and query events. Decide on a naming convention before you ship and stick with it.
+</Callout>
+
+## Payload rules
+
+Payload values must be primitives — strings, numbers, or booleans. Tables and arrays are not supported in event payloads.
+
+```lua
+-- ✓ Valid
+StackFox.events:track("level_up", {
+  userId = tostring(player.UserId),
+  newLevel = 5,
+  firstLevelUp = true,
+})
+
+-- ✗ Invalid — nested tables are not allowed
+StackFox.events:track("level_up", {
+  rewards = { "sword", "shield" }, -- will be dropped or cause an error
+})
+```
+
+<Callout type="warning">
+Payload fields that contain unsupported types are silently dropped. Keep payloads flat.
+</Callout>
+
+## Viewing events
+
+Events appear in the **Events** tab of your dashboard. You can filter by event name and view the full payload for each entry.
+
+Events are stored in the order they're received. There is no deduplication — if you call `track` twice with the same payload, two events are stored.
+
+## Rate limits
+
+Each project has a limit of **1,000 events per minute**. Events that exceed the limit are dropped with a `429` response. Plan your tracking calls accordingly — don't track on every `Heartbeat` or `RenderStepped`.

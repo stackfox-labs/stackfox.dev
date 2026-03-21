@@ -1,0 +1,100 @@
+---
+title: Records
+description: External records your game and outside systems share.
+section: Records
+order: 1
+---
+
+Records are mutable key-value entries organized into **collections**. Both your game server and external systems can read and write them through the StackFox API — that shared access is what makes records useful as a data bridge.
+
+## Collections and keys
+
+Every record belongs to a collection. Within a collection, each record has a unique key. Think of it as:
+
+```
+collection → key → value (JSON object)
+```
+
+You decide what collections and keys mean. Common patterns:
+
+| Collection | Key | Value |
+|---|---|---|
+| `profiles` | `"123456"` (userId) | `{ xp: 2400, level: 12 }` |
+| `leaderboard` | `"global"` | `{ entries: [...] }` |
+| `config` | `"drop_rates"` | `{ common: 0.6, rare: 0.3 }` |
+
+## Writing a record
+
+```lua
+StackFox.records:set(collection, key, value)
+```
+
+```lua
+StackFox.records:set("profiles", tostring(player.UserId), {
+  xp = 2400,
+  level = 12,
+  lastSeen = os.time(),
+})
+```
+
+The entire value is replaced on each write. There is no partial update — always write the full record.
+
+<Callout type="info">
+If a record with that key doesn't exist, `set` creates it. If it does exist, `set` replaces it.
+</Callout>
+
+## Reading a record
+
+```lua
+local value = StackFox.records:get(collection, key)
+```
+
+Returns the stored table, or `nil` if the record doesn't exist.
+
+```lua
+local profile = StackFox.records:get("profiles", tostring(player.UserId))
+
+if profile then
+  print("Level:", profile.level)
+else
+  -- First time player — create default profile
+  StackFox.records:set("profiles", tostring(player.UserId), {
+    xp = 0,
+    level = 1,
+  })
+end
+```
+
+## Deleting a record
+
+```lua
+StackFox.records:delete(collection, key)
+```
+
+Permanently deletes the record. There is no trash or undo.
+
+## External access
+
+Any system with your project's API key can read and write records over the REST API:
+
+```
+GET  /v1/records/{collection}/{key}
+PUT  /v1/records/{collection}/{key}
+DELETE /v1/records/{collection}/{key}
+```
+
+This is the bridge. Your website can read a player's `profiles` record to show stats. Your admin panel can update a `config` record to change game behavior without deploying a new game version.
+
+<Callout type="warning" title="No partial updates from the API either">
+The REST `PUT` endpoint also replaces the full record. Read the current value first if you need to merge.
+</Callout>
+
+## Value limits
+
+- Maximum record value size: **64 KB** (serialized JSON)
+- Values must be JSON-serializable
+- Nested objects and arrays are supported (unlike event payloads)
+
+## Viewing records
+
+Records appear in the **Records** tab of your dashboard, grouped by collection. You can filter by collection name and view the full value for each entry.

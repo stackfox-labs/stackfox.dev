@@ -1,0 +1,55 @@
+---
+title: Introduction
+description: What StackFox is and how it works.
+section: Getting Started
+order: 1
+---
+
+StackFox is a **data bridge platform for Roblox games**. It connects your game to external systems by giving you two core primitives: **Events** and **Records**.
+
+## What it does
+
+Your Roblox game runs inside a sandboxed environment. StackFox gives you a structured, API-first way to move data in and out of that sandbox — without managing servers, databases, or authentication yourself.
+
+<Callout type="info" title="Core idea">
+StackFox sits between your Roblox game and the rest of your stack. Data flows out as Events, and in or out as Records.
+</Callout>
+
+## Two primitives
+
+### Events
+
+Events are one-way messages from your game to the outside world. Use them to track what's happening: a player joined, a purchase was made, a match ended.
+
+```lua
+StackFox.events:track("match_ended", {
+  winner = tostring(player.UserId),
+  duration_seconds = 142,
+  map = "Desert Outpost",
+})
+```
+
+Events are immutable once written. They're designed for logging, analytics, and triggering external workflows.
+
+### Records
+
+Records are key-value entries organized by collection. Both your game server and external systems can read and write them — that's what makes them a bridge.
+
+```lua
+-- Write from your game
+StackFox.records:set("profiles", tostring(player.UserId), {
+  xp = 2400,
+  level = 12,
+})
+
+-- Read from your game
+local profile = StackFox.records:get("profiles", tostring(player.UserId))
+```
+
+An external system (your website, Discord bot, admin tool) can read or write the same record over the REST API.
+
+## What StackFox is not
+
+- **Not a DataStore replacement.** Use DataStore for per-player saves that only your game needs. Use StackFox when external systems need access to that data too.
+- **Not a general-purpose database.** StackFox is optimized for the Roblox ↔ external systems data flow, not arbitrary relational queries.
+- **Not an analytics platform.** Events can feed analytics tools, but StackFox itself doesn't visualize or aggregate event data beyond the dashboard.
