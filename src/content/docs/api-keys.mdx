@@ -1,0 +1,93 @@
+---
+title: API Keys & Secrets
+description: How to store your StackFox API key safely using Roblox Secrets, and use different keys for Studio and production.
+section: Getting Started
+order: 3
+---
+
+Your API key authenticates every request the SDK makes. Hardcoding it in a script is a security risk — anyone who decompiles your game can read it. Roblox Secrets solve this.
+
+## What are Roblox Secrets?
+
+Secrets are key-value pairs you store in the Roblox cloud, attached to your game. They're injected at runtime via `HttpService:GetSecret()` and return a `Secret` object — an opaque type that can never be printed, logged, or leaked through the output. Only your server-side scripts can access them.
+
+<Callout type="info" title="Server-side only">
+`HttpService:GetSecret()` only works in server scripts. This lines up perfectly with how StackFox should always be initialized — on the server, never in a LocalScript.
+</Callout>
+
+## Adding a secret in Roblox Studio
+
+1. Open **Game Settings** → **Security**
+2. Scroll to **Secrets**
+3. Click **Add Secret**
+4. Set the **Key** (e.g. `STACKFOX_API_KEY`) and paste your API key as the **Value**
+5. Save
+
+Secrets are stored per-place and are never exposed in your game's source.
+
+## Using a secret with StackFox
+
+Pass the `Secret` object directly to `StackFox.init()` — the SDK accepts both plain strings and `Secret` values:
+
+```lua
+local HttpService = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local StackFox = require(ReplicatedStorage.StackFox)
+
+StackFox.init({
+  apiKey = HttpService:GetSecret("STACKFOX_API_KEY"),
+})
+```
+
+The SDK forwards the `Secret` to `HttpService:RequestAsync` as the `Authorization` header value. It is never concatenated into a plain string and never appears in output.
+
+## Separate keys for Studio and production
+
+It's good practice to use a different API key in Studio so test events and records don't pollute your production data. You can do this with two secrets and a `RunService` check:
+
+```lua
+local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local StackFox = require(ReplicatedStorage.StackFox)
+
+local apiKey = if RunService:IsStudio()
+  then HttpService:GetSecret("STACKFOX_DEV_API_KEY")
+  else HttpService:GetSecret("STACKFOX_API_KEY")
+
+StackFox.init({ apiKey = apiKey })
+```
+
+Set up two secrets in Game Settings:
+
+| Key | Value |
+|---|---|
+| `STACKFOX_API_KEY` | Your **production** project's API key |
+| `STACKFOX_DEV_API_KEY` | Your **development** project's API key |
+
+Create two separate projects in the StackFox dashboard — one for production, one for development. Events and records will be isolated between them.
+
+<Callout type="tip" title="One secret per environment">
+Keep your dev and prod API keys in separate StackFox projects, not just separate keys on the same project. That way the data, activity logs, and dashboard views stay completely separate.
+</Callout>
+
+## Why not just use a plain string?
+
+```lua
+-- ❌ Don't do this — the key is visible in your source code
+StackFox.init({ apiKey = "sf_live_abc123..." })
+```
+
+Plain strings are readable by anyone with file access to your published place. Secrets are:
+
+- **Never stored in your game source** — they live in Roblox's cloud
+- **Never printable** — the `Secret` type has no string representation
+- **Never logged** — they're redacted in all Roblox output windows
+- **Scoped to your game** — they can't be accessed from other games or plugins
+
+## Next steps
+
+- [Events overview](/docs/events) — start tracking what's happening in your game.
+- [Records overview](/docs/records) — read and write structured data from the server.

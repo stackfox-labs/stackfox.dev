@@ -29,15 +29,18 @@ ReplicatedStorage
 In a **Server Script** inside `ServerScriptService`:
 
 ```lua
+local HttpService = game:GetService("HttpService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
 local StackFox = require(ReplicatedStorage.StackFox)
 
 StackFox.init({
-  apiKey = "sf_live_your_key_here",
+  apiKey = HttpService:GetSecret("STACKFOX_API_KEY"),
 })
 ```
+
+Add your API key as a Secret in **Game Settings → Security → Secrets** with the key `STACKFOX_API_KEY`. See [API Keys & Secrets](/docs/api-keys) for the full setup, including using a separate key for Studio vs production.
 
 <Callout type="warning" title="Keep your key server-side">
 Never initialize StackFox in a LocalScript. Your API key must stay on the server.

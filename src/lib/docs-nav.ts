@@ -14,6 +14,7 @@ export const docsNav: DocsNavSection[] = [
     items: [
       { title: "Introduction", slug: "introduction" },
       { title: "Quick Start", slug: "quick-start" },
+      { title: "API Keys & Secrets", slug: "api-keys" },
     ],
   },
   {
