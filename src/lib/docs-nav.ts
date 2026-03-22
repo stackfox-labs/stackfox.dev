@@ -18,6 +18,13 @@ export const docsNav: DocsNavSection[] = [
     ],
   },
   {
+    section: "Dashboard",
+    items: [
+      { title: "Project Settings", slug: "project-settings" },
+      { title: "Account Settings", slug: "account-settings" },
+    ],
+  },
+  {
     section: "Events",
     items: [
       { title: "Overview", slug: "events" },

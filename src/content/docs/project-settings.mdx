@@ -1,0 +1,65 @@
+---
+title: Project Settings
+description: Rename your project, manage members, and configure or delete your project from the Settings page.
+section: Dashboard
+order: 1
+---
+
+Every project has a Settings page reachable from the sidebar or the project dropdown in the topbar. It's split into two areas: **Project Settings** and **Account Settings**.
+
+## Project details
+
+The **Project Details** card lets you rename your project and shows the Project ID and creation date.
+
+### Renaming a project
+
+Click the pencil icon next to the project name, type the new name, and press **Enter** or click the checkmark. Names are capped at 100 characters. Renaming only affects the display name — the Project ID and all API keys remain unchanged.
+
+### Project ID
+
+The Project ID is a stable, read-only identifier for your project (e.g. `proj_a1b2c3d4e5f6g7h8`). Copy it with the copy button. It's used internally and in some API responses, but you don't need it for normal SDK usage — API keys handle authentication.
+
+## API Keys
+
+The Settings page links directly to the [API Keys page](/docs/api-keys) where you can view, add, and revoke individual keys.
+
+<Callout type="info" title="Revoking all keys">
+The Danger Zone also has a **Revoke All API Keys** action. This deletes every existing key and immediately creates a fresh `Default` key. Any game server using an old key loses access instantly — update your Roblox Secret before revoking.
+</Callout>
+
+## Members
+
+The **Members** card shows everyone who has access to this project and lets you add or remove collaborators.
+
+### Adding a member
+
+Type a Roblox username in the `@username` field and click **Add** (or press **Enter**). The person must have signed into the StackFox dashboard at least once — their account is created on first login.
+
+| Role | Can view data | Can manage keys | Can rename | Can delete project |
+|---|---|---|---|---|
+| `owner` | ✓ | ✓ | ✓ | ✓ |
+| `member` | ✓ | — | — | — |
+
+<Callout type="info" title="Ownership">
+There is currently one owner per project — the person who created it. Ownership cannot be transferred.
+</Callout>
+
+### Removing a member
+
+Click the **×** button next to any non-owner member to remove their access immediately. The project owner cannot be removed.
+
+## Danger Zone
+
+### Revoke All API Keys
+
+Invalidates every key on the project and generates a new `Default` key. Use this if you suspect a key has been compromised. After revoking, update your `STACKFOX_API_KEY` secret in Roblox Studio before your next playtest.
+
+### Delete Project
+
+Permanently deletes the project and all associated data — events, records, activity logs, and API keys. This cannot be undone.
+
+To confirm, type the exact project name into the confirmation field, then click **Confirm Delete**.
+
+<Callout type="warning" title="Irreversible">
+Deleting a project destroys all its data permanently. There is no recovery path.
+</Callout>
