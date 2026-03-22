@@ -52,6 +52,24 @@ That file forces Railway to treat the site as a Nitro-backed app instead of a st
 3. Set `VITE_STACKFOX_DASHBOARD_URL` to the public dashboard URL.
 4. Deploy and bind the production domain after the healthcheck passes.
 
+### Manual production deploys from GitHub Actions
+
+If you want to stop Railway from deploying every commit, use `.github/workflows/deploy-production.yml` as the production deploy entrypoint for this repo.
+
+Required GitHub repository secret:
+
+- `RAILWAY_TOKEN`: a Railway project token scoped to the production environment for the `stackfox.dev` Railway project
+
+Required GitHub repository variables:
+
+- `RAILWAY_PROD_PROJECT_ID`: the Railway project ID for `stackfox.dev`
+- `RAILWAY_PROD_ENVIRONMENT`: the Railway environment name, usually `production`
+- `RAILWAY_PROD_SERVICE`: the Railway service ID or exact service name for the site
+
+Recommended GitHub environment:
+
+- `production-site`
+
 ## Contributing
 
 Contributions to the StackFox site are welcome! If you have suggestions for improvements, please open an issue or submit a pull request.

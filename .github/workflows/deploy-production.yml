@@ -1,0 +1,56 @@
+name: Deploy Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to deploy
+        required: true
+        default: main
+        type: string
+
+concurrency:
+  group: deploy-production-site
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production-site
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.14.0
+
+      - name: Install Railway CLI
+        run: npm install --global @railway/cli
+
+      - name: Validate deploy config
+        shell: bash
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT: ${{ vars.RAILWAY_PROD_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT: ${{ vars.RAILWAY_PROD_ENVIRONMENT }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_PROD_SERVICE }}
+        run: |
+          test -n "$RAILWAY_TOKEN" || { echo "Missing GitHub secret: RAILWAY_TOKEN"; exit 1; }
+          test -n "$RAILWAY_PROJECT" || { echo "Missing GitHub variable: RAILWAY_PROD_PROJECT_ID"; exit 1; }
+          test -n "$RAILWAY_ENVIRONMENT" || { echo "Missing GitHub variable: RAILWAY_PROD_ENVIRONMENT"; exit 1; }
+          test -n "$RAILWAY_SERVICE" || { echo "Missing GitHub variable: RAILWAY_PROD_SERVICE"; exit 1; }
+
+      - name: Deploy site to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_PROJECT: ${{ vars.RAILWAY_PROD_PROJECT_ID }}
+          RAILWAY_ENVIRONMENT: ${{ vars.RAILWAY_PROD_ENVIRONMENT }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_PROD_SERVICE }}
+        run: railway up --ci --service "$RAILWAY_SERVICE" --environment "$RAILWAY_ENVIRONMENT" --project "$RAILWAY_PROJECT"
