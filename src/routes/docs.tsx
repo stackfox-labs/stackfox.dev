@@ -37,11 +37,12 @@ function DocsSidebar({ isEmbedded, pathname }: { isEmbedded: boolean; pathname: 
             <ul className="space-y-0.5">
               {section.items.map((item) => {
                 const active = pathname === `/docs/${item.slug}`
+                const isNested = item.slug.includes("/")
                 return (
                   <li key={item.slug}>
                     <Link
-                      to="/docs/$slug"
-                      params={{ slug: item.slug }}
+                      to={isNested ? "/docs/$" : "/docs/$slug"}
+                      params={isNested ? { _splat: item.slug } : { slug: item.slug }}
                       search={(s) => s}
                       className={cn(
                         "block rounded-none border-l-2 py-1.5 pl-2 pr-3 text-sm transition-colors",

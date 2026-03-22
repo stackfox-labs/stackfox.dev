@@ -1,0 +1,230 @@
+---
+title: Records
+description: Read and write persistent records with the StackFox Luau SDK.
+section: Luau SDK
+order: 4
+---
+
+Records are mutable key-value entries organized into collections. Unlike events, records can be read, overwritten, and deleted. They're accessible from both your game server and external systems via the REST API.
+
+A record lives at `collection / key`. Both are arbitrary strings you define — for example collection `"profiles"`, key `"123456789"` (a player's UserId).
+
+---
+
+## Three usage patterns
+
+The SDK offers three ways to work with records, from least to most type-safe.
+
+### 1. Untyped (quick, one-off)
+
+No type annotation needed. The return is untyped — access fields at your own risk.
+
+```lua
+local data = StackFox.records:get("profiles", userId)
+StackFox.records:set("profiles", userId, { coins = 100 })
+StackFox.records:delete("profiles", userId)
+```
+
+### 2. Annotated generic
+
+Annotate the variable with your type to get autocomplete and type checking for a single call.
+
+```lua
+type PlayerData = { coins: number, level: number, xp: number }
+
+local profile: PlayerData = StackFox.records:get("profiles", userId)
+-- `profile.coins`, `profile.level`, etc. are now type-checked
+```
+
+### 3. TypedStore (recommended for repeated use)
+
+Create a collection handle once and bind a type to it. All subsequent calls on that handle are type-checked automatically.
+
+```lua
+type PlayerData = { coins: number, level: number, xp: number }
+
+local Profiles = StackFox.records:store("profiles") :: Records.TypedStore<PlayerData>
+
+local profile = Profiles:get(userId)          -- inferred as PlayerData
+Profiles:set(userId, { coins = 100, level = 5, xp = 200 })
+Profiles:delete(userId)
+```
+
+Import the `Records` type for the annotation:
+
+```lua
+local Records = require(ReplicatedStorage.StackFox.records)
+```
+
+---
+
+## `records:get()`
+
+Fetches a record's data from a collection.
+
+```lua
+StackFox.records:get(collection, key)
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `collection` | `string` | Collection name. Non-empty string. |
+| `key` | `string` | Record key within the collection. Non-empty string. |
+
+**Returns:** The record's data as a table, or `nil` if the record doesn't exist.
+
+```lua
+local profile = StackFox.records:get("profiles", tostring(player.UserId))
+
+if not profile then
+  -- first visit — no record yet
+end
+```
+
+---
+
+## `records:set()`
+
+Creates or fully replaces a record. There is no partial update — the entire data field is overwritten.
+
+```lua
+StackFox.records:set(collection, key, data)
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `collection` | `string` | Collection name. Non-empty string. |
+| `key` | `string` | Record key within the collection. Non-empty string. |
+| `data` | `table` | Data to store. Must be a table. Nested tables and arrays are allowed. |
+
+**Returns:** The saved data table as returned by the API.
+
+```lua
+StackFox.records:set("profiles", tostring(player.UserId), {
+  coins    = 500,
+  level    = 12,
+  inventory = { "sword_iron", "shield_wood" },
+})
+```
+
+<Callout type="warning" title="Full replacement, not merge">
+`set()` replaces the entire record. If a key existed with `{ coins = 100, level = 5 }` and you call `set()` with `{ coins = 200 }`, the result is `{ coins = 200 }` — `level` is gone.
+
+Read the current value first if you need to merge:
+
+```lua
+local profile = StackFox.records:get("profiles", userId)
+local updated = table.clone(profile or {})
+updated.coins = (updated.coins or 0) + 100
+StackFox.records:set("profiles", userId, updated)
+```
+</Callout>
+
+---
+
+## `records:delete()`
+
+Permanently deletes a record. This cannot be undone.
+
+```lua
+StackFox.records:delete(collection, key)
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `collection` | `string` | Collection name. Non-empty string. |
+| `key` | `string` | Record key to delete. Non-empty string. |
+
+**Returns:** `nil`. Errors if the request fails.
+
+```lua
+StackFox.records:delete("profiles", tostring(player.UserId))
+```
+
+---
+
+## `records:store()`
+
+Creates a `TypedStore` — a collection-scoped handle with a bound data type.
+
+```lua
+StackFox.records:store(collection)
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `collection` | `string` | Collection name to scope this store to. Non-empty string. |
+
+**Returns:** `TypedStore<T>` — cast with `::` to bind a type.
+
+```lua
+type PlayerData = { coins: number, level: number, xp: number }
+
+local Profiles = StackFox.records:store("profiles") :: Records.TypedStore<PlayerData>
+```
+
+### TypedStore methods
+
+| Method | Signature | Description |
+|---|---|---|
+| `get` | `(key: string) -> T` | Fetch a record. Returns `nil` if not found. |
+| `set` | `(key: string, data: T) -> T` | Write a record. Full replacement. Returns saved data. |
+| `delete` | `(key: string) -> ()` | Delete a record permanently. |
+
+---
+
+## Record data limits
+
+| Constraint | Limit |
+|---|---|
+| Max record size | 64 KB (serialized JSON) |
+| Key length | 512 characters |
+| Collection name length | 128 characters |
+| Nesting depth | No hard limit (stay under 64 KB total) |
+
+---
+
+## Collections
+
+Collections are created implicitly when you write the first record into them. You don't need to declare or configure them in the dashboard ahead of time.
+
+Collection names can be any non-empty string. Recommended conventions:
+
+```
+profiles     -- one record per player, keyed by UserId
+sessions     -- active game sessions
+leaderboard  -- global ranked entries
+config       -- server-side configuration values
+```
+
+---
+
+## Full example
+
+```lua
+local HttpService       = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players           = game:GetService("Players")
+
+local StackFox = require(ReplicatedStorage.StackFox)
+local Records  = require(ReplicatedStorage.StackFox.records)
+
+StackFox.init({ apiKey = HttpService:GetSecret("STACKFOX_API_KEY") })
+
+type PlayerData = { coins: number, level: number, firstSeen: number }
+
+local Profiles = StackFox.records:store("profiles") :: Records.TypedStore<PlayerData>
+
+Players.PlayerAdded:Connect(function(player)
+  local userId  = tostring(player.UserId)
+  local profile = Profiles:get(userId)
+
+  if not profile then
+    Profiles:set(userId, {
+      coins     = 0,
+      level     = 1,
+      firstSeen = os.time(),
+    })
+  end
+end)
+```

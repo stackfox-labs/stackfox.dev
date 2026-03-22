@@ -1,0 +1,109 @@
+---
+title: Events
+description: Track game events with the StackFox Luau SDK.
+section: Luau SDK
+order: 3
+---
+
+Events are immutable, timestamped records of things that happened in your game. Once tracked, they cannot be edited or deleted — they form an append-only log.
+
+## `events:track()`
+
+```lua
+StackFox.events:track(name, payload?)
+```
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `name` | `string` | Yes | Event name. Must be a non-empty string. Use `snake_case`. |
+| `payload` | `{[string]: any}?` | No | Flat key-value table of additional data. Values must be strings, numbers, or booleans. |
+
+**Returns:** `EventResponse`
+
+```lua
+type EventResponse = {
+  id: string,
+  event_name: string,
+  payload_json: { [string]: any },
+  created_at: string,   -- ISO 8601 timestamp
+}
+```
+
+### Example
+
+```lua
+local result = StackFox.events:track("item_purchased", {
+  userId   = tostring(player.UserId),
+  itemId   = "sword_iron",
+  currency = "coins",
+  amount   = 250,
+})
+
+print(result.id)          -- "evt_01j..."
+print(result.created_at)  -- "2024-11-12T08:30:00Z"
+```
+
+## Payload rules
+
+Payload values must be **primitives**: `string`, `number`, or `boolean`. Nested tables and arrays are not supported and will cause an error or be dropped.
+
+```lua
+-- Valid
+StackFox.events:track("level_up", {
+  userId     = tostring(player.UserId),
+  newLevel   = 12,
+  firstTime  = false,
+})
+
+-- Invalid — nested table
+StackFox.events:track("level_up", {
+  rewards = { "sword", "shield" },  -- not allowed
+})
+```
+
+<Callout type="warning">
+Payload fields with unsupported types are silently dropped. Validate your payload shape before tracking if the data is important.
+</Callout>
+
+Omitting the payload is fine — many events carry meaning just in their name:
+
+```lua
+StackFox.events:track("server_started")
+StackFox.events:track("round_ended")
+```
+
+## Naming conventions
+
+Use `snake_case`. Group related events with a shared prefix:
+
+```
+player_joined
+player_left
+player_banned
+
+match_started
+match_ended
+
+item_purchased
+item_equipped
+item_dropped
+
+economy_coins_spent
+economy_gems_earned
+```
+
+<Callout type="tip" title="Decide before you ship">
+Event names are stored as-is. A mix of `playerJoined`, `player_joined`, and `Player Joined` will show up as three separate event types in your dashboard. Pick a convention early and stick with it.
+</Callout>
+
+## Rate limits
+
+Each project allows **1,000 events per minute**. Requests that exceed the limit receive a `429` response and are retried once by the SDK (after ~200 ms). If the retry also fails, the call raises an error.
+
+Avoid calling `track()` inside tight loops or on every `Heartbeat`. Batch state changes into a single event at natural transition points (e.g. on round end, not on every hit).
+
+## Viewing events
+
+Tracked events appear in the **Events** tab of your StackFox dashboard. You can filter by event name and inspect the full payload for each entry.
+
+Events are stored in arrival order. There is no deduplication — calling `track()` twice with the same arguments creates two separate records.

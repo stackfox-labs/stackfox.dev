@@ -12,28 +12,37 @@ export const docsNav: DocsNavSection[] = [
   {
     section: "Getting Started",
     items: [
-      { title: "Introduction", slug: "introduction" },
-      { title: "Quick Start", slug: "quick-start" },
-      { title: "API Keys & Secrets", slug: "api-keys" },
+      { title: "Introduction", slug: "getting-started/introduction" },
+      { title: "Quick Start", slug: "getting-started/quick-start" },
+      { title: "API Keys & Secrets", slug: "getting-started/api-keys" },
     ],
   },
   {
     section: "Dashboard",
     items: [
-      { title: "Project Settings", slug: "project-settings" },
-      { title: "Account Settings", slug: "account-settings" },
+      { title: "Project Settings", slug: "dashboard/project-settings" },
+      { title: "Account Settings", slug: "dashboard/account-settings" },
     ],
   },
   {
     section: "Events",
     items: [
-      { title: "Overview", slug: "events" },
+      { title: "Overview", slug: "events/overview" },
     ],
   },
   {
     section: "Records",
     items: [
-      { title: "Overview", slug: "records" },
+      { title: "Overview", slug: "records/overview" },
+    ],
+  },
+  {
+    section: "Luau SDK",
+    items: [
+      { title: "Overview", slug: "sdk/luau/overview" },
+      { title: "Configuration", slug: "sdk/luau/configuration" },
+      { title: "Events", slug: "sdk/luau/events" },
+      { title: "Records", slug: "sdk/luau/records" },
     ],
   },
 ]
@@ -43,5 +52,5 @@ export function flattenNav(): DocsNavItem[] {
 }
 
 export function getFirstSlug(): string {
-  return docsNav[0]?.items[0]?.slug ?? "introduction"
+  return docsNav[0]?.items[0]?.slug ?? "getting-started/introduction"
 }

@@ -2,21 +2,20 @@ import { createFileRoute, notFound } from "@tanstack/react-router"
 import type { DocsFrontmatter } from "*.mdx"
 import { getMdxComponents } from "@/components/docs/mdx-components"
 
-// Handles flat /docs/:slug paths (single segment, no slashes).
-// Nested paths like /docs/sdk/luau/overview are handled by docs.$.tsx.
+// Matches all doc paths including nested ones like /docs/sdk/luau/overview
 const docModules = import.meta.glob<{
   default: React.ComponentType<{ components?: Record<string, unknown> }>
   frontmatter: DocsFrontmatter
-}>("../content/docs/*.mdx", { eager: true })
+}>("../content/docs/**/*.mdx", { eager: true })
 
 function getDoc(slug: string) {
   const key = `../content/docs/${slug}.mdx`
   return docModules[key] ?? null
 }
 
-export const Route = createFileRoute("/docs/$slug")({
+export const Route = createFileRoute("/docs/$")({
   loader: ({ params }) => {
-    const mod = getDoc(params.slug)
+    const mod = getDoc(params._splat ?? "")
     if (!mod) throw notFound()
     return { frontmatter: mod.frontmatter }
   },
@@ -25,9 +24,9 @@ export const Route = createFileRoute("/docs/$slug")({
 })
 
 function DocPage() {
-  const { slug } = Route.useParams()
+  const { _splat } = Route.useParams()
   const { frontmatter } = Route.useLoaderData()
-  const mod = getDoc(slug)
+  const mod = getDoc(_splat ?? "")
   if (!mod) return <DocNotFound />
   const MDXContent = mod.default
 

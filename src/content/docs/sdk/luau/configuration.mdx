@@ -1,0 +1,69 @@
+---
+title: Configuration
+description: All options available when initializing the Luau SDK.
+section: Luau SDK
+order: 2
+---
+
+`StackFox.init()` accepts a single config table. Only `apiKey` is required.
+
+```lua
+StackFox.init({
+  apiKey = HttpService:GetSecret("STACKFOX_API_KEY"),
+  baseUrl = "https://api.stackfox.dev",  -- optional
+})
+```
+
+## Options
+
+| Option | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `apiKey` | `string \| Secret` | Yes | — | Your project's API key. Prefer `HttpService:GetSecret()` in production. |
+| `baseUrl` | `string` | No | `"https://api.stackfox.dev"` | Override the API base URL (e.g. for a self-hosted instance). |
+
+## Using Roblox Secrets
+
+Pass a `Secret` from `HttpService:GetSecret()` instead of a plain string. Roblox secrets are never exposed in memory dumps or Studio output, making them safer for production use.
+
+```lua
+-- Preferred: uses a Roblox Secret
+StackFox.init({
+  apiKey = HttpService:GetSecret("STACKFOX_API_KEY"),
+})
+
+-- Acceptable during local development only
+StackFox.init({
+  apiKey = "sk-live-...",
+})
+```
+
+Set the secret in **Game Settings → Security → Secrets**. The string passed to `GetSecret()` is the key name, not the value.
+
+<Callout type="tip" title="Separate keys for Studio vs production">
+Create two API keys in your StackFox project — one for Studio playtests and one for live servers. Use `HttpService:GetSecret()` with different key names to swap them via environment. See [API Keys & Secrets](/docs/getting-started/api-keys) for step-by-step instructions.
+</Callout>
+
+## Custom base URL
+
+If you're running a self-hosted StackFox instance or routing requests through a proxy, pass `baseUrl`:
+
+```lua
+StackFox.init({
+  apiKey = HttpService:GetSecret("STACKFOX_API_KEY"),
+  baseUrl = "https://api.your-instance.example.com",
+})
+```
+
+Trailing slashes are stripped automatically. All SDK requests are relative to this URL.
+
+## Return value
+
+`StackFox.init()` returns the `StackFox` module itself so you can chain calls if needed, but this is optional:
+
+```lua
+-- Both are equivalent
+StackFox.init({ apiKey = "..." })
+
+local sf = StackFox.init({ apiKey = "..." })
+sf.events:track("server_started", {})
+```

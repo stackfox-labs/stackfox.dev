@@ -1,0 +1,83 @@
+---
+title: Overview
+description: Install and set up the StackFox Luau SDK for Roblox.
+section: Luau SDK
+order: 1
+---
+
+The Luau SDK lets your Roblox game send events and read/write records through StackFox — all from a server-side Script with no extra dependencies.
+
+## Requirements
+
+- Roblox Studio with **HTTP requests enabled** (Game Settings → Security → Allow HTTP Requests)
+- A StackFox project with an API key ([create one here](/dashboard))
+
+## Installation
+
+### Via Wally
+
+Add the SDK to your `wally.toml`:
+
+```toml
+[dependencies]
+StackFox = "stackfox/sdk-luau@0.1.0"
+```
+
+Run `wally install`, then sync with Rojo. The package will appear under `Packages` in your workspace.
+
+### Manual
+
+Download the latest `StackFox.rbxm` from the [GitHub Releases page](https://github.com/stackfox/sdk-luau/releases) and drag it into `ReplicatedStorage` in Studio.
+
+Your Explorer tree should look like:
+
+```
+ReplicatedStorage
+  └── StackFox (ModuleScript)
+```
+
+## Initialization
+
+Call `StackFox.init()` once at the top of a **Server Script** in `ServerScriptService`. The SDK is not safe to use from a `LocalScript` — your API key must stay on the server.
+
+```lua
+local HttpService = game:GetService("HttpService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local StackFox = require(ReplicatedStorage.StackFox)
+
+StackFox.init({
+  apiKey = HttpService:GetSecret("STACKFOX_API_KEY"),
+})
+```
+
+Add your key in **Game Settings → Security → Secrets** with the name `STACKFOX_API_KEY`. See [API Keys & Secrets](/docs/getting-started/api-keys) for the full setup guide.
+
+<Callout type="warning" title="Server-side only">
+Never call `StackFox.init()` or use `StackFox.events` / `StackFox.records` from a LocalScript. Your API key would be exposed to clients.
+</Callout>
+
+`init()` returns `StackFox` so you can chain if you want, but it also mutates module state — subsequent `require()` calls in the same server context share the same initialized instance.
+
+## Usage at a glance
+
+```lua
+local StackFox = require(ReplicatedStorage.StackFox)
+
+StackFox.init({ apiKey = HttpService:GetSecret("STACKFOX_API_KEY") })
+
+-- Track an event
+StackFox.events:track("player_joined", { userId = tostring(player.UserId) })
+
+-- Read a record
+local profile = StackFox.records:get("profiles", tostring(player.UserId))
+
+-- Write a record
+StackFox.records:set("profiles", tostring(player.UserId), { coins = 100 })
+```
+
+## Next steps
+
+- [Configuration](/docs/sdk/luau/configuration) — all `init()` options
+- [Events](/docs/sdk/luau/events) — tracking events with payloads
+- [Records](/docs/sdk/luau/records) — reading and writing persistent data
