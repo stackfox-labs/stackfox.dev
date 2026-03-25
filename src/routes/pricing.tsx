@@ -528,8 +528,8 @@ function SliderInput({ label, value, onChange, snapPoints, freeLimit, formatDisp
         style={{ background: trackBg }}
       />
 
-      {/* Markers */}
-      <div className="mt-2 flex justify-between">
+      {/* Markers — absolutely positioned to match thumb travel distance */}
+      <div className="relative mt-2 h-8">
         {snapPoints.map((point, i) => {
           const isFreeMarker = point === freeLimit
           const isPassed = currentIndex >= i
@@ -540,7 +540,8 @@ function SliderInput({ label, value, onChange, snapPoints, freeLimit, formatDisp
               key={i}
               type="button"
               onClick={() => onChange(point)}
-              className="flex flex-col items-center gap-0.5 group"
+              className="absolute flex -translate-x-1/2 flex-col items-center gap-0.5 group"
+              style={{ left: `calc(9px + ${i / lastIdx} * (100% - 18px))` }}
             >
               {/* Tick */}
               <div
