@@ -7,11 +7,9 @@ const footerSections = [
   {
     title: "Platform",
     links: [
+      { label: "Pricing", href: "/pricing" },
       { label: "Events", href: "/docs/events" },
       { label: "Records", href: "/docs/records" },
-      { label: "Feature Flags", href: "#" },
-      { label: "Leaderboards", href: "#" },
-      { label: "SDK Reference", href: "/docs/introduction" },
     ],
   },
   {
@@ -19,18 +17,13 @@ const footerSections = [
     links: [
       { label: "Documentation", href: "/docs" },
       { label: "Getting Started", href: "/docs/quick-start" },
-      { label: "API Reference", href: "#" },
-      { label: "Changelog", href: "#" },
-      { label: "Status Page", href: "#" },
+      { label: "Status Page", href: "https://stats.uptimerobot.com/kWLH8LRhyj" },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "Pricing", href: "/pricing" },
       { label: "About", href: "/about" },
-      { label: "Blog", href: "#" },
-      { label: "Careers", href: "#" },
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
     ],

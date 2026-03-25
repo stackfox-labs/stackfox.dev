@@ -16,7 +16,7 @@ export const Route = createFileRoute("/pricing")({
       {
         name: "description",
         content:
-          "StackFox is free to start. Every hosted organization includes free monthly usage. You only pay if you go above the included allowance.",
+          "StackFox is free to start. Every organization includes free monthly usage. You only pay if you go above the included allowance.",
       },
     ],
   }),
@@ -91,7 +91,7 @@ const faqItems = [
     title: "What happens if I stay under the allowance?",
     content: (
       <p className="text-zinc-600">
-        Nothing happens — you're never charged. The allowance is included automatically for every hosted organization.
+        Nothing happens — you're never charged. The allowance is included automatically for every organization.
         There's no credit card required to get started.
       </p>
     ),
@@ -101,7 +101,7 @@ const faqItems = [
     title: "How is usage calculated?",
     content: (
       <p className="text-zinc-600">
-        Usage is measured across your hosted organization. Events are counted per ingestion call. Record Reads and Writes
+        Usage is measured across your organization. Events are counted per ingestion call. Record Reads and Writes
         are counted per operation. Storage is the total bytes stored across all your records. Overage is only charged on
         units above the free allowance.
       </p>
@@ -161,7 +161,7 @@ function HeroSection({ dashboardUrl }: { dashboardUrl: string }) {
           Pay only for what you use.
         </h1>
         <p className="mb-4 max-w-2xl text-lg text-zinc-300 sm:text-xl">
-          Every hosted StackFox organization includes a free monthly usage allowance.{" "}
+          Every StackFox organization includes a free monthly usage allowance.{" "}
           <span className="text-white font-semibold">You only pay if you go above it.</span>
         </p>
         <p className="mb-8 max-w-2xl text-base text-zinc-400">
@@ -222,7 +222,7 @@ function IncludedAllowanceSection() {
             Included every month. <span className="text-primary">For free.</span>
           </h2>
           <p className="mx-auto max-w-2xl text-base text-zinc-600 sm:text-lg">
-            Every hosted organization automatically gets this allowance each month. If your usage stays under these
+            Every organization automatically gets this allowance each month. If your usage stays under these
             limits, your bill is{" "}
             <span className="font-semibold text-foreground">$0</span>.
           </p>
@@ -634,7 +634,7 @@ function TrustSection({ dashboardUrl }: { dashboardUrl: string }) {
     {
       icon: <CheckCircle className="h-5 w-5 text-green-600" />,
       title: "No charges under the allowance",
-      body: "The free monthly allowance is real — not a trial. Every hosted organization gets it automatically, every month.",
+      body: "The free monthly allowance is real — not a trial. Every organization gets it automatically, every month.",
     },
   ]
 
