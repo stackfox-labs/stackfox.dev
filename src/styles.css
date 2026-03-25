@@ -277,6 +277,58 @@
   }
 }
 
+/* ── Brutalist range slider ── */
+.slider-brutal {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 12px;
+  border: 2px solid #141414;
+  cursor: pointer;
+  border-radius: 0;
+  outline: none;
+  display: block;
+  width: 100%;
+}
+
+.slider-brutal:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.slider-brutal::-webkit-slider-runnable-track {
+  height: 100%;
+  border-radius: 0;
+  background: transparent;
+}
+
+.slider-brutal::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 28px;
+  margin-top: -10px;
+  background: #141414;
+  border-radius: 0;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.slider-brutal::-moz-range-track {
+  height: 12px;
+  border: 2px solid #141414;
+  border-radius: 0;
+  background: transparent;
+}
+
+.slider-brutal::-moz-range-thumb {
+  width: 18px;
+  height: 28px;
+  background: #141414;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+
 .subtle-grid {
   background-image:
     linear-gradient(to right, color-mix(in oklab, var(--color-foreground) 2%, transparent) 1px, transparent 1px),

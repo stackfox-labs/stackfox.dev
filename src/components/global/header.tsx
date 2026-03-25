@@ -14,17 +14,11 @@ export function Header() {
           <Link to="/" className="flex items-center space-x-2 mr-6">
             <Logo />
           </Link>
-          <a href="#platform" className="nav-link-3d px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors">
-            Platform
-          </a>
-          <a href="#how-it-works" className="nav-link-3d px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors">
-            How It Works
-          </a>
-          <a href="#use-cases" className="nav-link-3d px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors">
-            Use Cases
-          </a>
           <Link to="/docs" className="nav-link-3d px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors">
             Docs
+          </Link>
+          <Link to="/pricing" className="nav-link-3d px-3 py-1.5 text-sm font-medium text-zinc-800 transition-colors">
+            Pricing
           </Link>
         </nav>
 
