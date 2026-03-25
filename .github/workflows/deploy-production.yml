@@ -19,6 +19,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 6
     environment: stackfox-labs / production
     steps:
       - name: Checkout
@@ -53,4 +54,4 @@ jobs:
           RAILWAY_PROJECT: ${{ vars.RAILWAY_PROD_PROJECT_ID }}
           RAILWAY_ENVIRONMENT: ${{ vars.RAILWAY_PROD_ENVIRONMENT }}
           RAILWAY_SERVICE: ${{ vars.RAILWAY_PROD_SERVICE }}
-        run: railway up --ci --service "$RAILWAY_SERVICE" --environment "$RAILWAY_ENVIRONMENT" --project "$RAILWAY_PROJECT"
+        run: railway up --ci --service "$RAILWAY_SERVICE" --environment "$RAILWAY_ENVIRONMENT" --project "$RAILWAY_PROJECT" -m "[GITHUB Actions] $(git log -1 --pretty=%s)"
