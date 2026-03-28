@@ -1,0 +1,165 @@
+---
+title: Building Flows
+description: Create triggers, conditions, and actions in the dashboard.
+section: Workflows
+order: 2
+---
+
+Use the **Flows** area in the dashboard to create and manage workflows for a project.
+
+## Creating a flow
+
+Inside a project, open **Flows** and click **New flow**.
+
+Each flow is built in four steps:
+
+1. Give the flow a clear name
+2. Choose a trigger
+3. Add optional conditions
+4. Add one or more actions
+
+## Choosing a trigger
+
+### Event trigger
+
+Use an event trigger when your game tracks something that happened:
+
+```text
+purchase
+match_started
+admin_command_used
+```
+
+Best for one-time facts and gameplay activity.
+
+### Record trigger
+
+Use a record trigger when you want to react to a stored record changing:
+
+```text
+profiles created
+profiles updated
+profiles created_or_updated
+```
+
+Best for syncing or reacting to shared state.
+
+## Adding conditions
+
+Conditions let you filter down which trigger payloads should actually run the flow.
+
+Examples:
+
+```text
+price greater_than 100
+rank equals "moderator"
+status exists
+```
+
+Condition values are parsed as JSON when possible. That means all of these work:
+
+```text
+100
+true
+"vip"
+```
+
+<Callout type="info">
+Use one condition per rule. If you add multiple conditions, they must all pass before actions run.
+</Callout>
+
+## Adding actions
+
+You can attach multiple actions to the same flow. They run in order and each result is logged.
+
+### Generic webhook action
+
+Choose a saved generic webhook connection, then provide:
+
+- a JSON body template
+- optional extra headers
+
+Example body:
+
+```json
+{
+  "flow": "{{flow.name}}",
+  "trigger": "{{trigger}}",
+  "payload": "{{payload}}"
+}
+```
+
+### Discord webhook action
+
+Choose a saved Discord connection and write a message template:
+
+```text
+High-value purchase from {{payload.userId}} for {{payload.price}}
+```
+
+### Record write action
+
+Provide:
+
+- the target collection
+- a record key template
+- whether to merge or replace
+- a JSON data template
+- optional numeric increments
+
+Example:
+
+```json
+{
+  "status": "review_required",
+  "lastPurchaseAmount": "{{payload.price}}"
+}
+```
+
+Example increments:
+
+```json
+{
+  "highValuePurchases": 1
+}
+```
+
+## Template variables
+
+Flow templates can reference the current execution context with double braces:
+
+- `{{payload.userId}}`
+- `{{payload.price}}`
+- `{{trigger.eventName}}`
+- `{{trigger.collection}}`
+- `{{trigger.recordKey}}`
+- `{{flow.name}}`
+
+If a template value is the entire field, StackFox will preserve the original type when possible. This is useful for numbers, booleans, or full objects.
+
+## Enabling and disabling
+
+Flows can be saved enabled or disabled.
+
+- **Enabled**: runs automatically when the trigger matches
+- **Disabled**: stays saved, but does not execute
+
+This is useful when you want to stage a flow before turning it on.
+
+## Viewing logs
+
+Open a flow and check its **Logs** page to inspect:
+
+- trigger snapshots
+- action results
+- failures and response details
+
+If a webhook fails or a condition never matches, the logs page is the first place to look.
+
+## Recommended workflow
+
+1. Create or test the connection first
+2. Build the flow with one action
+3. Trigger it with a known test payload
+4. Inspect the logs
+5. Add more actions once the first path is working

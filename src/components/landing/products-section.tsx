@@ -69,7 +69,7 @@ StackFox.records:delete("players", playerId)`,
     description:
       "React to your game data instantly. When something happens in your game, Flows fires automatically — sending webhooks, posting to Discord, or updating records — without touching your game code.",
     Icon: Zap,
-    status: "soon" as const,
+    status: "available" as const,
     features: [
       "Trigger on any event or record update",
       "Optional conditions to filter when flows run",
@@ -83,7 +83,7 @@ StackFox.records:delete("players", playerId)`,
 
 function FlowsPanel() {
   return (
-    <div className="border-2 border-foreground shadow-brutal-md overflow-hidden">
+    <div className="h-full border-2 border-foreground overflow-hidden">
       {/* Page header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200 bg-white">
         <div>
@@ -191,24 +191,24 @@ export function ProductsSection() {
           </p>
         </div>
 
-        <div className="border-2 border-foreground shadow-brutal-lg overflow-hidden">
-          {/* Tab bar */}
-          <div className="flex overflow-x-auto border-b-2 border-foreground bg-zinc-900">
+        <div className="border-2 border-foreground shadow-brutal-lg overflow-hidden flex flex-col md:flex-row">
+          {/* Left sidebar: product list */}
+          <div className="md:w-52 shrink-0 bg-zinc-900 border-b-2 md:border-b-0 md:border-r-2 border-foreground flex md:flex-col overflow-x-auto md:overflow-x-visible">
             {products.map((p) => (
               <button
                 key={p.id}
                 onClick={() => setActiveId(p.id)}
                 className={cn(
-                  "flex items-center gap-2.5 px-5 py-4 text-sm font-semibold whitespace-nowrap transition-colors border-r-2 border-zinc-700 shrink-0 cursor-pointer",
+                  "flex items-center gap-3 px-5 py-4 text-sm font-semibold whitespace-nowrap transition-colors cursor-pointer w-full text-left shrink-0 md:shrink border-r-2 md:border-r-0 md:border-b-2 border-zinc-700",
                   activeId === p.id
-                    ? "bg-white text-zinc-900 border-b-2 border-b-white -mb-px"
+                    ? "bg-primary text-white border-primary"
                     : "text-zinc-400 hover:text-white hover:bg-zinc-800",
                 )}
               >
                 <p.Icon className="w-4 h-4 shrink-0" />
-                {p.name}
+                <span>{p.name}</span>
                 {p.status === "soon" && (
-                  <span className="text-[10px] font-bold text-zinc-500 bg-zinc-800 px-1.5 py-0.5 rounded hidden sm:inline">
+                  <span className="ml-auto text-[10px] font-bold text-zinc-500 bg-zinc-800 px-1.5 py-0.5 hidden sm:inline">
                     SOON
                   </span>
                 )}
@@ -216,27 +216,31 @@ export function ProductsSection() {
             ))}
           </div>
 
-          {/* Content */}
-          <div className="bg-white p-8 lg:p-12">
-            <div className="grid lg:grid-cols-2 gap-10 items-start">
-              {/* Left: description */}
-              <div>
-                <div className="flex items-center gap-3 mb-3">
-                  <product.Icon className="w-6 h-6 text-primary shrink-0" />
-                  <h3 className="text-2xl font-bold text-zinc-900">{product.name}</h3>
-                  {product.status === "soon" && (
-                    <span className="text-xs font-bold bg-zinc-100 text-zinc-500 border border-zinc-300 px-2 py-0.5">
-                      Coming soon
-                    </span>
-                  )}
-                </div>
+          {/* Right: content */}
+          <div className="flex-1 bg-white flex flex-col">
+            {/* Product header */}
+            <div className="px-8 pt-8 pb-6 border-b-2 border-foreground">
+              <div className="flex items-center gap-3 mb-2">
+                <product.Icon className="w-6 h-6 text-primary shrink-0" />
+                <h3 className="text-2xl font-bold text-zinc-900">{product.name}</h3>
+                {product.status === "soon" && (
+                  <span className="text-xs font-bold bg-zinc-100 text-zinc-500 border border-zinc-300 px-2 py-0.5">
+                    Coming soon
+                  </span>
+                )}
+              </div>
+              <p className="text-base font-semibold text-zinc-700">{product.tagline}</p>
+              <p className="text-zinc-500 mt-2 leading-relaxed text-sm">{product.description}</p>
+            </div>
 
-                <p className="text-lg font-semibold text-zinc-800 mb-3">{product.tagline}</p>
-                <p className="text-zinc-600 mb-8 leading-relaxed">{product.description}</p>
-
+            {/* Features + code/panel */}
+            <div className="flex-1 grid lg:grid-cols-[2fr_3fr] gap-0 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-foreground/10">
+              {/* Features */}
+              <div className="p-8">
+                <p className="text-xs font-bold uppercase tracking-widest text-zinc-400 mb-5">Features</p>
                 <ul className="space-y-3">
                   {product.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-zinc-700">
+                    <li key={f} className="flex items-start gap-3 text-zinc-700 text-sm">
                       <div className="w-5 h-5 bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0 mt-0.5">
                         <div className="w-1.5 h-1.5 bg-primary rounded-full" />
                       </div>
@@ -246,20 +250,24 @@ export function ProductsSection() {
                 </ul>
               </div>
 
-              {/* Right: code example or flows panel */}
-              {product.id === "flows" ? (
-                <FlowsPanel />
-              ) : (
-                <div className="border-2 border-foreground bg-zinc-900 shadow-brutal-md">
-                  <div className="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-700 bg-zinc-800">
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                    <span className="ml-2 text-xs text-zinc-400 font-mono">{product.filename}</span>
+              {/* Code / panel */}
+              <div className="p-8 flex items-start">
+                {product.id === "flows" ? (
+                  <div className="w-full">
+                    <FlowsPanel />
                   </div>
-                  <LuaCode code={product.code!} />
-                </div>
-              )}
+                ) : (
+                  <div className="w-full border-2 border-foreground bg-zinc-900 shadow-brutal-md">
+                    <div className="flex items-center gap-2 px-4 py-2.5 border-b border-zinc-700 bg-zinc-800">
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+                      <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                      <span className="ml-2 text-xs text-zinc-400 font-mono">{product.filename}</span>
+                    </div>
+                    <LuaCode code={product.code!} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

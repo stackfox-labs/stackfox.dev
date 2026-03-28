@@ -6,7 +6,7 @@ import { Card3D } from "@/components/ui/card-3d"
 import { Button } from "@/components/ui/button"
 import { Accordion3D } from "@/components/ui/accordion-3d"
 import { getDashboardUrl } from "@/lib/dashboard-url"
-import { CheckCircle, Zap, BookOpen, PenLine, HardDrive } from "lucide-react"
+import { CheckCircle, Zap, BookOpen, PenLine, HardDrive, Workflow } from "lucide-react"
 
 export const Route = createFileRoute("/pricing")({
   component: PricingPage,
@@ -25,37 +25,43 @@ export const Route = createFileRoute("/pricing")({
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const FREE_EVENTS = 250_000
+const FREE_FLOWS = 50_000
 const FREE_READS = 100_000
 const FREE_WRITES = 50_000
 const FREE_STORAGE_MB = 100
 
 const EVENT_RATE = 0.0000005 // per unit
+const FLOW_RATE = 0.000001 // per unit ($1.00 / 1M)
 const READ_RATE = 0.000002 // per unit
 const WRITE_RATE = 0.000004 // per unit
 const STORAGE_RATE_PER_BYTE = 0.0000000001 // per byte
 
-function calcCost(events: number, reads: number, writes: number, storageMb: number) {
+function calcCost(events: number, flows: number, reads: number, writes: number, storageMb: number) {
   const storageBytes = storageMb * 1024 * 1024
   const freeStorageBytes = FREE_STORAGE_MB * 1024 * 1024
 
   const billableEvents = Math.max(0, events - FREE_EVENTS)
+  const billableFlows = Math.max(0, flows - FREE_FLOWS)
   const billableReads = Math.max(0, reads - FREE_READS)
   const billableWrites = Math.max(0, writes - FREE_WRITES)
   const billableBytes = Math.max(0, storageBytes - freeStorageBytes)
 
   const eventCost = billableEvents * EVENT_RATE
+  const flowCost = billableFlows * FLOW_RATE
   const readCost = billableReads * READ_RATE
   const writeCost = billableWrites * WRITE_RATE
   const storageCost = billableBytes * STORAGE_RATE_PER_BYTE
 
-  const total = eventCost + readCost + writeCost + storageCost
+  const total = eventCost + flowCost + readCost + writeCost + storageCost
 
   return {
     billableEvents,
+    billableFlows,
     billableReads,
     billableWrites,
     billableBytes,
     eventCost,
+    flowCost,
     readCost,
     writeCost,
     storageCost,
@@ -101,9 +107,9 @@ const faqItems = [
     title: "How is usage calculated?",
     content: (
       <p className="text-zinc-600">
-        Usage is measured across your organization. Events are counted per ingestion call. Record Reads and Writes
-        are counted per operation. Storage is the total bytes stored across all your records. Overage is only charged on
-        units above the free allowance.
+        Usage is measured across your organization. Events are counted per ingestion call. Flow Runs are counted each
+        time a flow executes. Record Reads and Writes are counted per operation. Storage is the total bytes stored
+        across all your records. Overage is only charged on units above the free allowance.
       </p>
     ),
   },
@@ -192,6 +198,13 @@ function IncludedAllowanceSection() {
       description: "Ingested events from your Roblox game",
     },
     {
+      icon: <Workflow className="h-6 w-6 text-primary" />,
+      label: "Flow Runs",
+      value: "50,000",
+      unit: "/ month",
+      description: "Automated flow executions triggered by events",
+    },
+    {
       icon: <BookOpen className="h-6 w-6 text-primary" />,
       label: "Record Reads",
       value: "100,000",
@@ -228,7 +241,7 @@ function IncludedAllowanceSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {allowances.map((item) => (
             <Card3D key={item.label} className="p-6 cursor-default">
               <div className="mb-4">{item.icon}</div>
@@ -260,6 +273,7 @@ function IncludedAllowanceSection() {
 function OverageTableSection() {
   const rows = [
     { label: "Events", normalized: "$0.50", unit: "per 1M events" },
+    { label: "Flow Runs", normalized: "$1.00", unit: "per 1M runs" },
     { label: "Record Reads", normalized: "$2.00", unit: "per 1M reads" },
     { label: "Record Writes", normalized: "$4.00", unit: "per 1M writes" },
     { label: "Storage", normalized: "$0.10", unit: "per GB" },
@@ -306,6 +320,7 @@ function OverageTableSection() {
 // ── Snap-point definitions ────────────────────────────────────────────────────
 
 const EVENTS_SNAPS = [0, 250_000, 500_000, 750_000, 1_000_000]
+const FLOWS_SNAPS = [0, 50_000, 100_000, 250_000, 500_000]
 const READS_SNAPS = [0, 100_000, 250_000, 500_000, 1_000_000]
 const WRITES_SNAPS = [0, 50_000, 100_000, 250_000, 500_000]
 const STORAGE_MB_SNAPS = [0, 100, 250, 500, 1_000]
@@ -327,11 +342,12 @@ function fmtStorageMarker(mb: number): string {
 
 function CalculatorSection() {
   const [events, setEvents] = useState(250_000)
+  const [flows, setFlows] = useState(50_000)
   const [reads, setReads] = useState(100_000)
   const [writes, setWrites] = useState(50_000)
   const [storageMb, setStorageMb] = useState(100)
 
-  const result = calcCost(events, reads, writes, storageMb)
+  const result = calcCost(events, flows, reads, writes, storageMb)
   const isAllFree = result.total === 0
 
   const billableMb = result.billableBytes / (1024 * 1024)
@@ -357,6 +373,15 @@ function CalculatorSection() {
               onChange={setEvents}
               snapPoints={EVENTS_SNAPS}
               freeLimit={FREE_EVENTS}
+              formatDisplay={(v) => formatNumber(v)}
+              formatMarker={fmtShort}
+            />
+            <SliderInput
+              label="Flow Runs"
+              value={flows}
+              onChange={setFlows}
+              snapPoints={FLOWS_SNAPS}
+              freeLimit={FREE_FLOWS}
               formatDisplay={(v) => formatNumber(v)}
               formatMarker={fmtShort}
             />
@@ -423,6 +448,14 @@ function CalculatorSection() {
                   billed={result.billableEvents}
                   cost={result.eventCost}
                   unit="events"
+                />
+                <BreakdownRow
+                  label="Flow Runs"
+                  total={flows}
+                  free={Math.min(flows, FREE_FLOWS)}
+                  billed={result.billableFlows}
+                  cost={result.flowCost}
+                  unit="runs"
                 />
                 <BreakdownRow
                   label="Reads"

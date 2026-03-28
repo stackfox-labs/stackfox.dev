@@ -1,0 +1,104 @@
+---
+title: Connections
+description: Reusable destinations for webhooks and Discord actions.
+section: Workflows
+order: 3
+---
+
+Connections let you save outbound destinations once and reuse them across multiple flows.
+
+Instead of pasting the same webhook URL into every action, you create a connection and select it wherever you need it.
+
+## Why connections exist
+
+Connections make workflows easier to manage:
+
+- create a destination once
+- reuse it across many flows
+- rotate or replace it later
+- avoid spreading raw webhook URLs across the dashboard
+
+## Connection types
+
+### Generic webhook connection
+
+Use this for any external HTTP endpoint.
+
+Stores:
+
+- name
+- webhook URL
+- optional description
+- optional static headers
+
+This is the most flexible connection type and works well for your own backend, automation endpoints, or third-party services that accept JSON webhooks.
+
+### Discord webhook connection
+
+Use this when you want a flow to post directly into a Discord channel.
+
+Stores:
+
+- name
+- Discord webhook URL
+- optional description
+
+Discord connections are optimized for the built-in Discord action so you do not need to paste the same Discord URL every time.
+
+## Creating a connection
+
+Open **Flows -> Connections** inside a project, then choose the connection type you want to create.
+
+For generic webhooks you can also add static headers as JSON:
+
+```json
+{
+  "Authorization": "Bearer YOUR_TOKEN",
+  "X-Project": "stackfox"
+}
+```
+
+## Testing a connection
+
+After saving a connection, use the **Test** action from the connections page.
+
+- generic webhook connections receive a test `POST`
+- Discord connections receive a test message
+
+If the test fails, check:
+
+- the URL is correct
+- any required auth headers are present
+- the remote endpoint accepts JSON
+
+## Editing and rotating
+
+Because flows reference connections by ID, you can update a connection later without rebuilding every flow that uses it.
+
+This is especially useful when:
+
+- a webhook URL changes
+- a token rotates
+- you want multiple flows to point at a new destination
+
+## Security notes
+
+StackFox stores connection values separately from flow definitions and does not expose raw saved webhook URLs back throughout the dashboard after creation.
+
+<Callout type="warning" title="Treat connection URLs like secrets">
+Many webhook URLs are effectively credentials. Share them carefully and rotate them if you think they were exposed.
+</Callout>
+
+## Recommended setup
+
+For most projects, this is a good starting point:
+
+1. One Discord connection for alerts
+2. One generic webhook connection for your backend
+3. Clear names that describe where each connection points
+
+Examples:
+
+- `Moderation Alerts`
+- `Production Backend`
+- `QA Discord`

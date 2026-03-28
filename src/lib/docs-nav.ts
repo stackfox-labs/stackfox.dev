@@ -20,6 +20,7 @@ export const docsNav: DocsNavSection[] = [
   {
     section: "Dashboard",
     items: [
+      { title: "Organizations", slug: "dashboard/organizations" },
       { title: "Project Settings", slug: "dashboard/project-settings" },
       { title: "Account Settings", slug: "dashboard/account-settings" },
     ],
@@ -34,6 +35,14 @@ export const docsNav: DocsNavSection[] = [
     section: "Records",
     items: [
       { title: "Overview", slug: "records/overview" },
+    ],
+  },
+  {
+    section: "Workflows",
+    items: [
+      { title: "Overview", slug: "workflows/overview" },
+      { title: "Building Flows", slug: "workflows/building-flows" },
+      { title: "Connections", slug: "workflows/connections" },
     ],
   },
   {

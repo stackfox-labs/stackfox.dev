@@ -7,11 +7,13 @@ order: 2
 
 This guide takes you from zero to your first event and record in StackFox.
 
-## 1. Create a project
+## 1. Create an organization and project
 
-Go to your [StackFox dashboard](/dashboard) and create a new project. A project holds all events, records, and API keys for one game.
+Go to your [StackFox dashboard](/dashboard) and create your first organization with its first project.
 
-After creation you'll land on the project overview. Copy your **API key** from the API Keys page — you'll need it in step 3.
+An organization owns projects, members, usage, and billing. A project holds the events, records, flows, and API keys for one game or environment.
+
+After creation you'll land on the project overview. Copy your **API key** from the API Keys page - you'll need it in step 3.
 
 ## 2. Install the Luau SDK
 
@@ -19,9 +21,9 @@ In Roblox Studio, place the StackFox module inside `ReplicatedStorage`. Get the 
 
 Your `Explorer` should look like:
 
-```
+```text
 ReplicatedStorage
-  └── StackFox (ModuleScript)
+  -> StackFox (ModuleScript)
 ```
 
 ## 3. Initialize the client
@@ -40,7 +42,7 @@ StackFox.init({
 })
 ```
 
-Add your API key as a Secret in **Game Settings → Security → Secrets** with the key `STACKFOX_API_KEY`. See [API Keys & Secrets](/docs/getting-started/api-keys) for the full setup, including using a separate key for Studio vs production.
+Add your API key as a Secret in **Game Settings -> Security -> Secrets** with the key `STACKFOX_API_KEY`. See [API Keys & Secrets](/docs/getting-started/api-keys) for the full setup, including using a separate key for Studio vs production.
 
 <Callout type="warning" title="Keep your key server-side">
 Never initialize StackFox in a LocalScript. Your API key must stay on the server.
@@ -93,5 +95,6 @@ Records are accessible over the REST API too. Any external system with your API 
 
 ## Next steps
 
-- [Events overview](/docs/events/overview) — learn what you can track and how events are structured.
-- [Records overview](/docs/records/overview) — understand collections, keys, and external access.
+- [Organizations](/docs/dashboard/organizations) - understand how StackFox is structured
+- [Events overview](/docs/events/overview) - learn what you can track and how events are structured.
+- [Records overview](/docs/records/overview) - understand collections, keys, and external access.

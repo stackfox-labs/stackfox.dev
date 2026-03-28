@@ -5,19 +5,19 @@ section: Getting Started
 order: 3
 ---
 
-Your API key authenticates every request the SDK makes. Hardcoding it in a script is a security risk — anyone who decompiles your game can read it. Roblox Secrets solve this.
+Your API key authenticates every request the SDK makes. Hardcoding it in a script is a security risk - anyone who decompiles your game can read it. Roblox Secrets solve this.
 
 ## What are Roblox Secrets?
 
-Secrets are key-value pairs you store in the Roblox cloud, attached to your game. They're injected at runtime via `HttpService:GetSecret()` and return a `Secret` object — an opaque type that can never be printed, logged, or leaked through the output. Only your server-side scripts can access them.
+Secrets are key-value pairs you store in the Roblox cloud, attached to your game. They're injected at runtime via `HttpService:GetSecret()` and return a `Secret` object - an opaque type that can never be printed, logged, or leaked through the output. Only your server-side scripts can access them.
 
 <Callout type="info" title="Server-side only">
-`HttpService:GetSecret()` only works in server scripts. This lines up perfectly with how StackFox should always be initialized — on the server, never in a LocalScript.
+`HttpService:GetSecret()` only works in server scripts. This lines up perfectly with how StackFox should always be initialized - on the server, never in a LocalScript.
 </Callout>
 
 ## Adding a secret in Roblox Studio
 
-1. Open **Game Settings** → **Security**
+1. Open **Game Settings** -> **Security**
 2. Scroll to **Secrets**
 3. Click **Add Secret**
 4. Set the **Key** (e.g. `STACKFOX_API_KEY`) and paste your API key as the **Value**
@@ -27,7 +27,7 @@ Secrets are stored per-place and are never exposed in your game's source.
 
 ## Using a secret with StackFox
 
-Pass the `Secret` object directly to `StackFox.init()` — the SDK accepts both plain strings and `Secret` values:
+Pass the `Secret` object directly to `StackFox.init()` - the SDK accepts both plain strings and `Secret` values:
 
 ```lua
 local HttpService = game:GetService("HttpService")
@@ -67,7 +67,7 @@ Set up two secrets in Game Settings:
 | `STACKFOX_API_KEY` | Your **production** project's API key |
 | `STACKFOX_DEV_API_KEY` | Your **development** project's API key |
 
-Create two separate projects in the StackFox dashboard — one for production, one for development. Events and records will be isolated between them.
+Create two separate projects in the StackFox dashboard - one for production, one for development. Most teams keep both inside the same organization, but separate organizations also work if you want stricter isolation. Events and records will be isolated between projects.
 
 <Callout type="tip" title="One secret per environment">
 Keep your dev and prod API keys in separate StackFox projects, not just separate keys on the same project. That way the data, activity logs, and dashboard views stay completely separate.
@@ -76,18 +76,19 @@ Keep your dev and prod API keys in separate StackFox projects, not just separate
 ## Why not just use a plain string?
 
 ```lua
--- ❌ Don't do this — the key is visible in your source code
+-- Do not do this - the key is visible in your source code
 StackFox.init({ apiKey = "sf_live_abc123..." })
 ```
 
 Plain strings are readable by anyone with file access to your published place. Secrets are:
 
-- **Never stored in your game source** — they live in Roblox's cloud
-- **Never printable** — the `Secret` type has no string representation
-- **Never logged** — they're redacted in all Roblox output windows
-- **Scoped to your game** — they can't be accessed from other games or plugins
+- **Never stored in your game source** - they live in Roblox's cloud
+- **Never printable** - the `Secret` type has no string representation
+- **Never logged** - they're redacted in all Roblox output windows
+- **Scoped to your game** - they can't be accessed from other games or plugins
 
 ## Next steps
 
-- [Events overview](/docs/events/overview) — start tracking what's happening in your game.
-- [Records overview](/docs/records/overview) — read and write structured data from the server.
+- [Organizations](/docs/dashboard/organizations) - understand how projects fit inside organizations.
+- [Events overview](/docs/events/overview) - start tracking what's happening in your game.
+- [Records overview](/docs/records/overview) - read and write structured data from the server.

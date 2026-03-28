@@ -1,15 +1,15 @@
 ---
 title: Account Settings
-description: View your Roblox profile info and manage your StackFox account from the Settings page.
+description: View your Roblox profile info and manage your StackFox account from the Settings area.
 section: Dashboard
-order: 2
+order: 3
 ---
 
-Account settings are found at the bottom of any project's **Settings** page. They're global to your StackFox account, not specific to a single project.
+Account settings are the personal part of the Settings area. They are global to your StackFox account, not tied to just one project or one organization.
 
 ## Profile
 
-The **Profile** card shows the information pulled from your Roblox account at login:
+The **Profile** card shows the identity information pulled from Roblox when you sign in:
 
 | Field | Source |
 |---|---|
@@ -19,27 +19,34 @@ The **Profile** card shows the information pulled from your Roblox account at lo
 | Member Since | When your StackFox account was created |
 
 <Callout type="info" title="Read-only profile">
-Profile information is synced from Roblox OAuth each time you sign in and cannot be edited in StackFox. To change your display name or username, update them on Roblox.com and sign in again.
+This information comes from Roblox OAuth and cannot be edited inside StackFox. If you change it on Roblox, sign in again to refresh what StackFox shows.
 </Callout>
 
-## Signing in
+## Authentication
 
-StackFox uses **Roblox OAuth** for authentication — there is no separate password. Click **Sign In with Roblox** on the dashboard login screen to authenticate with your Roblox account.
+StackFox uses **Roblox OAuth** for sign-in. There is no separate StackFox password.
 
-Your session persists via a secure, HTTP-only cookie. Clicking the sign-out button in the sidebar clears the session immediately.
+When you sign in, StackFox creates a secure session cookie for the dashboard. Signing out clears that session.
 
 ## Delete Account
 
-The **Account Danger Zone** has a single action: **Delete Account**.
+The **Account Danger Zone** includes **Delete Account**.
 
-Deleting your account:
+Deleting your account will:
 
-- Permanently removes your StackFox user record and all active sessions
-- Deletes every project you own, including all their events, records, logs, and API keys
-- Removes your membership from any projects you were added to as a member (those projects are not deleted)
+- permanently remove your StackFox user record and active sessions
+- delete every organization you own
+- delete every project inside those owned organizations
+- delete the data inside those owned projects, including events, records, flows, logs, and API keys
+- remove your membership from organizations you do not own
 
-To confirm, type your Roblox username into the confirmation field and click **Confirm Delete Account**.
+To confirm, type your Roblox username and submit the delete dialog.
 
 <Callout type="warning" title="Irreversible">
-Account deletion is permanent. All data owned by your account is destroyed and cannot be recovered. Projects you were a member of (but did not own) are unaffected.
+Account deletion is permanent. If you own organizations, deleting your account deletes those organizations and their projects too.
 </Callout>
+
+## Related docs
+
+- [Organizations](/docs/dashboard/organizations) - understand how ownership and membership work
+- [Project Settings](/docs/dashboard/project-settings) - manage organization members and project-level actions

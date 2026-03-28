@@ -1,0 +1,139 @@
+---
+title: Workflows
+description: React to events and record changes by running actions automatically.
+section: Workflows
+order: 1
+---
+
+Workflows let you tell StackFox what to do when something happens.
+
+In the dashboard, a workflow is called a **Flow**. Each flow has three parts:
+
+1. A **trigger** that starts the flow
+2. Optional **conditions** that decide whether it should continue
+3. One or more **actions** that run after the trigger matches
+
+At a high level:
+
+```text
+When something happens -> do something
+```
+
+## Supported triggers
+
+Flows currently support two trigger types:
+
+### Event trigger
+
+Runs when StackFox ingests an event with a matching name.
+
+```text
+On event "purchase"
+```
+
+### Record trigger
+
+Runs when a record in a collection is created or updated.
+
+```text
+On record "profiles" updated
+```
+
+This makes flows useful for both analytics-style events and data-sync style records.
+
+## Supported conditions
+
+Conditions are optional. They inspect the trigger payload before actions run.
+
+Supported comparisons:
+
+- equals
+- not equal
+- greater than
+- greater than or equal
+- less than
+- less than or equal
+- exists
+
+Example:
+
+```text
+On event "purchase"
+If price > 100
+```
+
+<Callout type="tip" title="Conditions read from the trigger payload">
+For event triggers, conditions inspect event payload fields. For record triggers, they inspect record data fields.
+</Callout>
+
+## Supported actions
+
+Flows currently support three action types:
+
+### Generic webhook
+
+Send a `POST` request to any external HTTP endpoint.
+
+Typical uses:
+
+- forward game activity to your backend
+- notify internal tools
+- trigger third-party automation
+
+### Discord webhook
+
+Send a message to a saved Discord webhook connection.
+
+Typical uses:
+
+- post admin alerts
+- notify moderators
+- surface high-value events in real time
+
+### Record write
+
+Write data back into StackFox Records.
+
+Typical uses:
+
+- set a status flag
+- update a profile record
+- increment a numeric field
+
+## Execution model
+
+Flows run asynchronously after the original event or record write succeeds. StackFox will:
+
+1. receive the event or record change
+2. find matching enabled flows
+3. evaluate conditions
+4. run actions in the background
+5. store execution logs
+
+That means tracking an event does not wait on Discord or external webhooks to finish before returning.
+
+## Logs and debugging
+
+Every flow stores execution history so you can inspect:
+
+- when it ran
+- whether it succeeded
+- what triggered it
+- what each action returned
+
+This is the fastest way to debug a broken webhook or a condition that never matches.
+
+## Example
+
+```text
+On event "purchase"
+If payload.price > 100
+-> Send Discord webhook
+-> Send generic webhook
+-> Update a record
+```
+
+## Next steps
+
+- [Building Flows](/docs/workflows/building-flows) - create triggers, conditions, actions, and templates
+- [Connections](/docs/workflows/connections) - save reusable webhook and Discord destinations

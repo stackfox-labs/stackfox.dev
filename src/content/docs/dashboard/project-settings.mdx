@@ -1,65 +1,107 @@
 ---
 title: Project Settings
-description: Rename your project, manage members, and configure or delete your project from the Settings page.
+description: Manage organization details, members, project settings, API keys, and destructive actions from the Settings area.
 section: Dashboard
-order: 1
+order: 2
 ---
 
-Every project has a Settings page reachable from the sidebar or the project dropdown in the topbar. It's split into two areas: **Project Settings** and **Account Settings**.
+Every project has a **Settings** area reachable from the sidebar. Even though you open it from a specific project, it now includes three kinds of settings:
 
-## Project details
+- organization settings
+- project settings
+- account settings
 
-The **Project Details** card lets you rename your project and shows the Project ID and creation date.
+The members list and your role are organization-level, not project-level.
 
-### Renaming a project
+## Organization
 
-Click the pencil icon next to the project name, type the new name, and press **Enter** or click the checkmark. Names are capped at 100 characters. Renaming only affects the display name — the Project ID and all API keys remain unchanged.
+At the top of the page you'll see an **Organization** section.
 
-### Project ID
+This section shows:
 
-The Project ID is a stable, read-only identifier for your project (e.g. `proj_a1b2c3d4e5f6g7h8`). Copy it with the copy button. It's used internally and in some API responses, but you don't need it for normal SDK usage — API keys handle authentication.
+- the organization name
+- your current role in that organization
+- the organization members list
 
-## API Keys
+Owners and admins can rename the organization and manage members from here.
 
-The Settings page links directly to the [API Keys page](/docs/getting-started/api-keys) where you can view, add, and revoke individual keys.
+### Organization roles
 
-<Callout type="info" title="Revoking all keys">
-The Danger Zone also has a **Revoke All API Keys** action. This deletes every existing key and immediately creates a fresh `Default` key. Any game server using an old key loses access instantly — update your Roblox Secret before revoking.
+Current roles in the dashboard include:
+
+| Role | Can access projects | Can manage members | Can rename org | Can delete projects |
+|---|---|---|---|---|
+| `owner` | Yes | Yes | Yes | Yes |
+| `admin` | Yes | Yes | Yes | Yes |
+| `member` | Yes | No | No | No |
+
+<Callout type="info" title="Organization-scoped access">
+Members are added to the organization once, then gain access to that organization's projects through their org role. You do not manage separate member lists per project.
 </Callout>
-
-## Members
-
-The **Members** card shows everyone who has access to this project and lets you add or remove collaborators.
 
 ### Adding a member
 
-Type a Roblox username in the `@username` field and click **Add** (or press **Enter**). The person must have signed into the StackFox dashboard at least once — their account is created on first login.
+Type a Roblox username in the `@username` field and click **Add**.
 
-| Role | Can view data | Can manage keys | Can rename | Can delete project |
-|---|---|---|---|---|
-| `owner` | ✓ | ✓ | ✓ | ✓ |
-| `member` | ✓ | — | — | — |
+The user must have signed into StackFox at least once so their dashboard account exists.
 
-<Callout type="info" title="Ownership">
-There is currently one owner per project — the person who created it. Ownership cannot be transferred.
-</Callout>
+Newly added members join with the `member` role.
 
 ### Removing a member
 
-Click the **×** button next to any non-owner member to remove their access immediately. The project owner cannot be removed.
+Owners and admins can remove non-owner members from the organization.
+
+The organization owner cannot be removed from this screen.
+
+## Project details
+
+The **Project Details** card is still project-specific.
+
+It lets you:
+
+- rename the current project
+- view the project ID
+- see which organization the project belongs to
+- see when it was created
+
+Renaming a project only changes its display name. The project ID and API keys stay the same.
+
+## API Keys
+
+The Settings area links directly to the [API Keys page](/docs/getting-started/api-keys), where you can create, revoke, and rotate keys for the current project.
+
+<Callout type="info" title="Revoking all keys">
+The danger zone also includes **Revoke All API Keys**. This immediately invalidates all existing keys for the project and creates a fresh default key, so update your Roblox secret right away if you use it.
+</Callout>
 
 ## Danger Zone
 
+Project destructive actions still happen at the project level, even though access is controlled by your organization role.
+
 ### Revoke All API Keys
 
-Invalidates every key on the project and generates a new `Default` key. Use this if you suspect a key has been compromised. After revoking, update your `STACKFOX_API_KEY` secret in Roblox Studio before your next playtest.
+Invalidates every API key on the current project and generates a new default key.
+
+Use this if you think a key was exposed.
 
 ### Delete Project
 
-Permanently deletes the project and all associated data — events, records, activity logs, and API keys. This cannot be undone.
+Deletes the current project and all of its project-scoped data, including:
 
-To confirm, type the exact project name into the confirmation field, then click **Confirm Delete**.
+- events
+- records
+- flows
+- logs
+- API keys
+
+To confirm, type the exact project name and submit the dialog.
 
 <Callout type="warning" title="Irreversible">
-Deleting a project destroys all its data permanently. There is no recovery path.
+Project deletion is permanent. There is no recovery path after the project is deleted.
 </Callout>
+
+## Related docs
+
+- [Organizations](/docs/dashboard/organizations) - understand org ownership, roles, billing, and member scope
+- [Account Settings](/docs/dashboard/account-settings) - manage your personal StackFox account
+- [API Keys & Secrets](/docs/getting-started/api-keys) - connect Roblox securely to a project

@@ -1,0 +1,114 @@
+---
+title: Organizations
+description: How organizations work in StackFox, and how projects, members, billing, and usage fit inside them.
+section: Dashboard
+order: 1
+---
+
+Organizations are the top-level container in StackFox.
+
+An organization owns:
+
+- projects
+- members
+- usage
+- billing
+
+Projects live inside organizations.
+
+## Hierarchy
+
+```text
+Organization
+  -> Project A
+  -> Project B
+  -> Project C
+```
+
+Each project still contains its own events, records, flows, API keys, and logs. But access, collaboration, and billing are scoped at the organization level.
+
+## Creating an organization
+
+When you first enter the dashboard, StackFox asks you to create:
+
+1. an organization
+2. its first project
+
+If you already have an organization, the dashboard lets you create additional projects inside it.
+
+<Callout type="info" title="First-time setup">
+Organizations are created before projects. Every project belongs to exactly one organization.
+</Callout>
+
+## What organizations control
+
+### Members
+
+Members are added to the organization, not to individual projects.
+
+That means a member with access to an organization can access that organization's projects according to their role. You do not need to re-add the same collaborator project by project.
+
+### Billing and usage
+
+Hosted billing is tracked per organization. Free allowance, billable overage, spend caps, and Stripe setup apply to the organization as a whole, not one project at a time.
+
+If one organization has multiple projects, their usage rolls up together for billing.
+
+### Naming
+
+Organizations and projects each have their own names:
+
+- organization name: your studio, team, or workspace
+- project name: a specific game, environment, or experience inside that organization
+
+Example:
+
+```text
+Organization: Foxbyte Studio
+Projects: Main Experience, Staging, Analytics Sandbox
+```
+
+## Roles
+
+Organization roles determine who can manage the workspace.
+
+Current roles in the dashboard include:
+
+- `owner`
+- `admin`
+- `member`
+
+Owners and admins can manage the organization more broadly. Members are for standard collaboration access.
+
+<Callout type="warning" title="Organization-wide scope">
+If you add someone to an organization, you are giving them access at the organization level, not just to one single project.
+</Callout>
+
+## Organization settings
+
+From a project's Settings page, you'll see an **Organization** section where you can:
+
+- rename the organization
+- view your role
+- manage members if your role allows it
+
+This is also where StackFox exposes the members list.
+
+## Choosing your structure
+
+A good default is:
+
+- one organization per studio or team
+- one project per game or per environment
+
+Common setups:
+
+- one organization with `Production` and `Staging` projects
+- one organization with separate projects for multiple games
+- separate organizations for fully separate teams or clients
+
+## Next steps
+
+- [Quick Start](/docs/getting-started/quick-start) - create your first organization and project
+- [Project Settings](/docs/dashboard/project-settings) - manage organization members, project details, and dangerous actions
+- [API Keys & Secrets](/docs/getting-started/api-keys) - understand project-level API keys inside an organization
